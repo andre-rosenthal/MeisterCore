@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MeisterCore</id>
+    <version>1.0.0</version>
+    <authors>Gateway Architects</authors>
+    <owners>Gateway Architects</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://www.gameister.com/</licenseUrl>
+    <projectUrl>http://www.gameister.com/</projectUrl>
+    <iconUrl>http://www.gameister.com/</iconUrl>
+    <description>Meister V2.0 Core Nuget Package</description>
+    <copyright>Gateway Architects</copyright>
+    <dependencies>
+      <group targetFramework=".NETCoreApp2.1">
+        <dependency id="Newtonsoft.Json" version="12.0.1-beta1" exclude="Build,Analyzers" />
+        <dependency id="NuGet.Build" version="2.12.0" exclude="Build,Analyzers" />
+        <dependency id="NuGet.Client" version="4.3.0-beta1-2418" exclude="Build,Analyzers" />
+        <dependency id="System.Net.Http" version="4.3.4" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="c:\users\daniel rosenthal\documents\visual studio 2017\Projects\MeisterCore\MeisterCore\bin\Release\netcoreapp2.1\MeisterCore.dll" target="lib\netcoreapp2.1\MeisterCore.dll" />
+  </files>
+</package>

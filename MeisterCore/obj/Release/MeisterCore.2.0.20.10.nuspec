@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MeisterCore</id>
+    <version>2.0.20.10</version>
+    <authors>Gateway Architects</authors>
+    <owners>Gateway Architects</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://www.gameister.com/</licenseUrl>
+    <projectUrl>http://www.gameister.com/</projectUrl>
+    <description>Meister V2.0 Core Nuget Package</description>
+    <releaseNotes>Final Version for Meister 2.0 SP1</releaseNotes>
+    <copyright>Gateway Architects</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
+        <dependency id="NuGet.Client" version="4.2.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp2.1">
+        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
+        <dependency id="NuGet.Client" version="4.2.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Daniel Rosenthal\Source\Repos\MeisterCore\MeisterCore\MeisterCore\bin\Release\net45\MeisterCore.dll" target="lib\net45\MeisterCore.dll" />
+    <file src="C:\Users\Daniel Rosenthal\Source\Repos\MeisterCore\MeisterCore\MeisterCore\bin\Release\netcoreapp2.1\MeisterCore.dll" target="lib\netcoreapp2.1\MeisterCore.dll" />
+  </files>
+</package>
