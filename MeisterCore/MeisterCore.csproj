@@ -66,6 +66,7 @@ Release build</PackageReleaseNotes>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="JScript\" />
     <Folder Include="Resources\" />
   </ItemGroup>
 
