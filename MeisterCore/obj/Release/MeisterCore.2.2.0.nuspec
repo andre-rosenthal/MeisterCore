@@ -12,18 +12,13 @@
     <releaseNotes>Final Version for Meister 2.0 SP2</releaseNotes>
     <copyright>Gateway Architects</copyright>
     <dependencies>
-      <group targetFramework=".NETFramework4.5">
-        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
-        <dependency id="NuGet.Client" version="4.2.0" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework=".NETCoreApp2.1">
-        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="Newtonsoft.Json" version="12.0.1" exclude="Build,Analyzers" />
         <dependency id="NuGet.Client" version="4.2.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="C:\Users\Daniel Rosenthal\Source\Repos\MeisterCore\MeisterCore\MeisterCore\bin\Release\net45\MeisterCore.dll" target="lib\net45\MeisterCore.dll" />
-    <file src="C:\Users\Daniel Rosenthal\Source\Repos\MeisterCore\MeisterCore\MeisterCore\bin\Release\netcoreapp2.1\MeisterCore.dll" target="lib\netcoreapp2.1\MeisterCore.dll" />
+    <file src="C:\Users\Daniel Rosenthal\Documents\GitHub\MeisterCore\MeisterCore\bin\Release\net472\MeisterCore.dll" target="lib\net472\MeisterCore.dll" />
   </files>
 </package>
