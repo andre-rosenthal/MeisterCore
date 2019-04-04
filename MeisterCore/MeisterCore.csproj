@@ -15,11 +15,11 @@ Meister V2.x Core Nuger Package</Description>
     <AssemblyOriginatorKeyFile>MeisterCoreV2.pfx</AssemblyOriginatorKeyFile>
     <PackageProjectUrl>http://www.gameister.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.0.0.300</Version>
-    <PackageReleaseNotes>Version 3.0.0.300 - Final
-Release build</PackageReleaseNotes>
-    <AssemblyVersion>3.0.0.300</AssemblyVersion>
-    <FileVersion>3.0.0.300</FileVersion>
+    <Version>3.0.0.350</Version>
+    <PackageReleaseNotes>Version 3.0.0.350 - Final
+Release build -Patch 50</PackageReleaseNotes>
+    <AssemblyVersion>3.0.0.350</AssemblyVersion>
+    <FileVersion>3.0.0.350</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
   </PropertyGroup>

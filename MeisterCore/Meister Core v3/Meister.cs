@@ -227,7 +227,8 @@ namespace MeisterCore
             else
                 try
                 {
-                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(od4.value);
+                    string json = Unescape(od4.value);
+                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
                 }
                 catch (MeisterException)
                 {
