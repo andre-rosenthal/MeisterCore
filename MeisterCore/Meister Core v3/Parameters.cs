@@ -1,16 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace MeisterCore
 {
-   
-    public enum CompressionsP
-    {
-        none,
-        Inbound,
-        Outbound,
-        Both
-    }
-
     [JsonObject("Parms")]
     public class Parameters
     {

@@ -378,7 +378,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.0.0.350",
+    "version": "3.0.1.25",
     "restore": {
       "projectUniqueName": "C:\\Users\\Daniel Rosenthal\\Documents\\GitHub\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",

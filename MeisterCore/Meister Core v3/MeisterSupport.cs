@@ -7,11 +7,111 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MeisterCore.Support
 {
+
+    /// <summary>
+    /// Support for vanilla ref result set
+    /// </summary>
+    [JsonObject("VanillaResponse")]
+    public partial class VanillaResponse<RES>
+    { 
+        [JsonProperty("type")]
+        public string type { get; set; }
+        [JsonProperty("val")]
+        public List<RES> res { get; set; }
+    }
+    /// <summary>
+    /// Non parametrized Vanilla ref result set with simple string
+    /// </summary>
+    public partial class VanillaResponse
+    {
+        [JsonProperty("type")]
+        public string type { get; set; }
+        [JsonProperty("val")]
+        public string res { get; set; }
+    }
+    /// <summary>
+    /// Post class support - pre call
+    /// </summary>
+    /// <typeparam name="REQ"></typeparam>
+    internal class Body<REQ>
+    {
+        public string Endpoint { get; set; }
+        public Parameters Parms { get; set; }
+        public REQ Json { get; set; }
+        public Body(string endpoint, Parameters parms, REQ json)
+        {
+            Endpoint = endpoint;
+            Parms = parms;
+            Json = json;
+        }
+    }
+    /// <summary>
+    /// Post class support - at call
+    /// </summary>
+    /// <typeparam name="REQ"></typeparam>
+    internal class BodyCall
+    {
+        public string Endpoint { get; set; }
+        public string Parms { get; set; }
+        public string Json { get; set; }
+        public BodyCall()
+        {
+            Endpoint = string.Empty;
+            Parms = string.Empty;
+            Json = string.Empty;
+        }
+    }
+    /// <summary>
+    /// OData v4 support class
+    /// </summary>
+    [JsonObject("OD4Body")]
+    public class OD4Body<RES>
+    {
+        [JsonProperty("@odata.context")]
+        public string odatacontext { get; set; }
+        [JsonProperty("value")]
+        public string value { get; set; }
+    }
+    /// <summary>
+    /// OData v2 class support
+    /// </summary>
+    /// <typeparam name="REQ"></typeparam>
+    internal class OD2Body<REQ>
+    {
+        public D d { get; set; }
+    }
+    /// <summary>
+    /// Node D of OData v2 payload
+    /// </summary>
+    internal class D
+    {
+        public List<ResultOD2> results { get; set; }
+    }
+    /// <summary>
+    /// Node Result of OData v2 payload
+    /// </summary>
+    internal class ResultOD2
+    {
+        public __Metadata __metadata { get; set; }
+        public string Endpoint { get; set; }
+        public string Parms { get; set; }
+        public string Json { get; set; }
+    }
+    /// <summary>
+    /// Node __Metadata of OData v2 payload
+    /// </summary>
+    internal class __Metadata
+    {
+        public string id { get; set; }
+        public string uri { get; set; }
+        public string type { get; set; }
+    }
     /// <summary>
     /// Support extensions ...
     /// </summary>
@@ -71,8 +171,8 @@ namespace MeisterCore.Support
         [Flags]
         public enum Protocols
         {
-            ODataV2,
-            ODataV4
+            ODataV2 = 0,
+            ODataV4 = 1
         }
         /// <summary>
         /// Extensions 
@@ -90,8 +190,8 @@ namespace MeisterCore.Support
         [Flags]
         public enum AuthenticationModes
         {
-            Basic,
-            OAuth
+            Basic = 0,
+            OAuth = 1
         }
         /// <summary>
         /// Meister options
@@ -99,14 +199,14 @@ namespace MeisterCore.Support
         [Flags]
         public enum MeisterOptions
         {
-            None,
-            CompressionsInbound,
-            CompressionsOutbound,
-            TestRun,
-            UseODataV4,
-            AsyncMode,
-            QuequeMode,
-            UseCallback
+            None = 0,
+            CompressionsInbound = 1,
+            CompressionsOutbound = 2,
+            TestRun = 4,
+            UseODataV4 = 16,
+            AsyncMode = 32,
+            QuequeMode = 64,
+            UseCallback = 128,
         }
         /// <summary>
         /// Runtime options 
@@ -114,10 +214,11 @@ namespace MeisterCore.Support
         [Flags]
         public enum RuntimeOptions
         {
-            ExecuteSync,
-            ExecuteAsync
+            ExecuteSync = 0,
+            ExecuteAsync = 1,
         }
         public const string Abap_true = "X";
+        public const string val = "val";
         private const string escaped = @"\""";
         private const char quote = '"';
         public static string Quote => quote.ToString();
@@ -125,7 +226,6 @@ namespace MeisterCore.Support
         {
         }
         #region Support calls ...
-
         /// <summary>
         /// Append single quote
         /// </summary>
@@ -134,6 +234,17 @@ namespace MeisterCore.Support
         public static string InQuotes(string json)
         {
             return "'" + json + "'";
+        }
+        /// <summary>
+        /// Remove dref from Meister's dref parser
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static string RemoveDrefAnnotations(string dref)
+        {
+            string json = dref.Replace("%type", "type");
+            json = json.Replace("%val", "val");
+            return json;
         }
         /// <summary>
         /// Copies to.

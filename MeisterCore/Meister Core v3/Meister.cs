@@ -12,87 +12,11 @@ using MeisterCore.Support;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
+using static MeisterCore.Parameters;
 using static MeisterCore.Support.MeisterSupport;
 
 namespace MeisterCore
 {
-    /// <summary>
-    /// Post class support - pre call
-    /// </summary>
-    /// <typeparam name="REQ"></typeparam>
-    internal class Body<REQ>
-    {
-        public string Endpoint { get; set; }
-        public Parameters Parms { get; set; }
-        public REQ Json { get; set; }
-        public Body(string endpoint, Parameters parms, REQ json)
-        {
-            Endpoint = endpoint;
-            Parms = parms;
-            Json = json;
-        }
-    }
-    /// <summary>
-    /// Post class support - at call
-    /// </summary>
-    /// <typeparam name="REQ"></typeparam>
-    internal class BodyCall
-    {
-        public string Endpoint { get; set; }
-        public string Parms { get; set; }
-        public string Json { get; set; }
-        public BodyCall()
-        {
-            Endpoint = string.Empty;
-            Parms = string.Empty;
-            Json = string.Empty;
-        }
-    }
-    /// <summary>
-    /// OData v4 support class
-    /// </summary>
-    [JsonObject("OD4Body")]
-    public class OD4Body<RES>
-    {
-        [JsonProperty("@odata.context")]
-        public string odatacontext { get; set; }
-        [JsonProperty("value")]
-        public string value { get; set; }
-    }
-    /// <summary>
-    /// OData v2 class support
-    /// </summary>
-    /// <typeparam name="REQ"></typeparam>
-    internal class OD2Body<REQ>
-    {
-        public D d { get; set; }
-    }
-    /// <summary>
-    /// Node D of OData v2 payload
-    /// </summary>
-    internal class D
-    {
-        public List<ResultOD2> results { get; set; }
-    }
-    /// <summary>
-    /// Node Result of OData v2 payload
-    /// </summary>
-    internal class ResultOD2
-    {
-        public __Metadata __metadata { get; set; }
-        public string Endpoint { get; set; }
-        public string Parms { get; set; }
-        public string Json { get; set; }
-    }
-    /// <summary>
-    /// Node __Metadata of OData v2 payload
-    /// </summary>
-    internal class __Metadata
-    {
-        public string id { get; set; }
-        public string uri { get; set; }
-        public string type { get; set; }
-    }
     /// <summary>
     /// Summary description for Meister Core Library Definistions - SIngleton pattern
     /// </summary>
@@ -208,6 +132,24 @@ namespace MeisterCore
             return false;
         }
         /// <summary>
+        /// Meister execution path
+        /// </summary>
+        /// <typeparam name="REQ"></typeparam>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="endpoint"></param>
+        /// <param name="req"></param>
+        /// <param name="parm"></param>
+        /// <param name="runtimeOption"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        internal dynamic Execute<REQ, RES>(string endpoint, REQ req, Parameters Parm, RuntimeOptions RuntimeOption, MeisterOptions options)
+        {
+            if (options.HasFlag(MeisterOptions.UseODataV4))
+                return ExecuteODataV4<REQ, RES>(endpoint, req, Parm, RuntimeOption, options);
+            else
+                return ExecuteODataV2<REQ, RES>(endpoint, req, Parm, RuntimeOption, options);
+        }
+        /// <summary>
         /// Execute under OData v4
         /// </summary>
         /// <typeparam name="REQ"></typeparam>
@@ -217,9 +159,9 @@ namespace MeisterCore
         /// <param name="parm"></param>
         /// <param name="runtimeOption"></param>
         /// <returns></returns>
-        internal dynamic ExecuteODataV4<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption)
+        internal dynamic ExecuteODataV4<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
-            OD4Body<RES> od4 = ExecuteODataV4Internal<REQ, RES>(endpoint, req, parm, runtimeOption);
+            OD4Body<RES> od4 = ExecuteODataV4Internal<REQ, RES>(endpoint, req, parm, runtimeOption, options);
             if (od4 == null)
                 return null;
             else if (string.IsNullOrEmpty(od4.odatacontext) && runtimeOption == RuntimeOptions.ExecuteSync)
@@ -227,8 +169,14 @@ namespace MeisterCore
             else
                 try
                 {
-                    string json = Unescape(od4.value);
-                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                    string json = string.Empty;
+                    if (options.HasFlag(MeisterOptions.CompressionsOutbound))
+                        json = Unzip(od4.value);
+                    else
+                        json = od4.value;
+                    json = Unescape(json);
+                    json = RemoveDrefAnnotations(json);
+                    return VanillaProcess<RES>(json);
                 }
                 catch (MeisterException)
                 {
@@ -245,7 +193,7 @@ namespace MeisterCore
         /// <param name="parm"></param>
         /// <param name="runtimeOption"></param>
         /// <returns></returns>
-        private OD4Body<RES> ExecuteODataV4Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption)
+        private OD4Body<RES> ExecuteODataV4Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
             RestRequest request = null;
             if (string.IsNullOrEmpty(CsrfToken))
@@ -269,20 +217,22 @@ namespace MeisterCore
             var body = new Body<REQ>(endpoint, parm, req);
             var bodycall = new BodyCall();
             request.Resource = ExecuteMeister;
-            bodycall.Json = PerformExtensions<REQ>(body.Json);
-            bodycall.Json = Unescape(bodycall.Json);
             bodycall.Parms = PerformExtensions<Parameters>(body.Parms);
             bodycall.Parms = Unescape(bodycall.Parms);
             bodycall.Endpoint = body.Endpoint;
+            bodycall.Json = PerformExtensions<REQ>(body.Json);
+            bodycall.Json = Unescape(bodycall.Json);
+            if (options.HasFlag(MeisterOptions.CompressionsInbound))
+                bodycall.Json = Zip(bodycall.Json);
             string json = JsonConvert.SerializeObject(bodycall);
             CancellationTokenSource cancel = new CancellationTokenSource();
             request.AddJsonBody(json);
             request.AddHeader("X-Request-With", "XMLHttpRequest");
             request.AddHeader("Accept", "*/*");
             request.AddHeader(csrf, CsrfToken);
-            request.AddHeader("Content-Type","application/json;odata.metadata=minimal; charset=utf-8");
+            request.AddHeader("Content-Type", "application/json;odata.metadata=minimal; charset=utf-8");
             response = null;
-            if (runtimeOption == RuntimeOptions.ExecuteAsync)
+            if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
             {
                 var task = Task.Run(async () =>
                 {
@@ -295,7 +245,6 @@ namespace MeisterCore
             else
                 return ExecuteSync<OD4Body<RES>>(request).Result;
         }
-
         /// <summary>
         /// Execute calls under OData v2
         /// </summary>
@@ -307,28 +256,70 @@ namespace MeisterCore
         /// <param name="runtimeOption"></param>
         /// <returns></returns>
 #pragma warning disable 1998
-        internal async Task<OD2Body<RES>> ExecuteODataV2<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption)
+        internal dynamic ExecuteODataV2<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
+        {
+            OD2Body<RES> od2 = ExecuteODataV2Internal<REQ, RES>(endpoint, req, parm, runtimeOption, options);
+            if (od2 == null)
+                return null;
+            else if (od2.d == null && runtimeOption == RuntimeOptions.ExecuteSync)
+                throw new MeisterException("Failure to acquire OData 2 return set");
+            else
+            {
+                try
+                {
+                    string json = string.Empty;
+                    var list = od2.d.results;
+                    if (list != null && list.Count > 0)
+                    {
+                        if (options.HasFlag(MeisterOptions.CompressionsOutbound))
+                            json = Unzip(list.FirstOrDefault().Json);
+                        else
+                            json = list.FirstOrDefault().Json;
+                        json = Unescape(json);
+                        json = RemoveDrefAnnotations(json);
+                    }
+                    return VanillaProcess<RES>(json);
+                }
+                catch (MeisterException)
+                {
+                    throw new MeisterException("Unable to marshall object d[0] from OD2Body");
+                }
+            }
+        }
+        /// <summary>
+        /// Execute internal of OData v2 call
+        /// </summary>
+        /// <typeparam name="REQ"></typeparam>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="endpoint"></param>
+        /// <param name="req"></param>
+        /// <param name="parm"></param>
+        /// <param name="runtimeOption"></param>
+        /// <returns></returns>
+        private OD2Body<RES> ExecuteODataV2Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
             RestRequest request = new RestRequest(Method.GET);
             request.Resource = ExecuteMeister;
             request.AddQueryParameter(EndPoint, InQuotes(endpoint));
-            request.AddQueryParameter(Parms, PerformExtensions<Parameters>(parm));
-            request.AddQueryParameter(Content, PerformExtensions<REQ>(req));
-            Task<OD2Body<RES>> task = default(Task<OD2Body<RES>>);
-            if (runtimeOption == RuntimeOptions.ExecuteAsync)
+            request.AddQueryParameter(Parms, InQuotes(PerformExtensions<Parameters>(parm)));
+            if (options.HasFlag(MeisterOptions.CompressionsOutbound))
+                request.AddQueryParameter(Content, InQuotes(Zip(PerformExtensions<REQ>(req))));
+            else
+                request.AddQueryParameter(Content, InQuotes(PerformExtensions<REQ>(req)));
+            CancellationTokenSource cancel = new CancellationTokenSource();
+            IRestResponse<OD2Body<RES>> response = null;
+            if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
             {
-                var taska = Task.Run(async () =>
+                var task = Task.Run(async () =>
                 {
-                    return await ExecuteAsync<OD2Body<RES>>(request);
+                    response = await Client.ExecuteTaskAsync<OD2Body<RES>>(request, cancel.Token);
+                    return response.Data;
                 });
-                task = taska;
+                task.Wait(cancel.Token);
                 return task.Result;
             }
             else
-            {
-                task = ExecuteSync<OD2Body<RES>>(request);
-                return task.Result;
-            }
+                return ExecuteSync<OD2Body<RES>>(request).Result;
         }
         /// <summary>
         /// Set extensions at Meister runtime
@@ -408,7 +399,123 @@ namespace MeisterCore
         {
             return (statusCode >= HttpStatusCode.OK && statusCode < HttpStatusCode.BadRequest);
         }
-
+        /// <summary>
+        /// Vanilla Processor
+        /// </summary>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        private dynamic VanillaProcess<RES>(string json)
+        {
+            try
+            {
+                List<VanillaResponse<RES>> vanilla = JsonConvert.DeserializeObject<List<VanillaResponse<RES>>>(json);
+                if (IsVanillaResponse(vanilla))
+                    return vanilla.FirstOrDefault().res;
+                else
+                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    VanillaResponse<RES> vanilla = JsonConvert.DeserializeObject<VanillaResponse<RES>>(json);
+                    if (vanilla != null && vanilla.res != null)
+                        return vanilla.res;
+                    else
+                        try
+                        {
+                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                        }
+                        catch (Exception)
+                        {
+                            return JsonConvert.DeserializeObject<RES>(json);
+                        }
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        VanillaResponse vanilla = JsonConvert.DeserializeObject<VanillaResponse>(json);
+                        if (vanilla != null)
+                            return vanilla.res;
+                        else
+                            try
+                            {
+                                return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                            }
+                            catch (Exception)
+                            {
+                                return JsonConvert.DeserializeObject<RES>(json);
+                            }
+                    }
+                    catch (Exception)
+                    {
+                        try
+                        {
+                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                        }
+                        catch (Exception)
+                        {
+                            try
+                            {
+                                return JsonConvert.DeserializeObject<RES>(json);
+                            }
+                            catch (Exception)
+                            {
+                                return DissectJson(json);
+                            }
+                        }
+                    }                   
+                }
+            }
+        }
+        /// <summary>
+        /// Checks if the envelope is dref based with IEnumerable
+        /// </summary>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="vanilla"></param>
+        /// <returns></returns>
+        private bool IsVanillaResponse<RES>(List<VanillaResponse<RES>> vanilla)
+        {
+            if (vanilla != null && vanilla.Count > 0 && vanilla.FirstOrDefault().res != null)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Checks if the envelope is dref based without IEnumerable 
+        /// </summary>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="vanilla"></param>
+        /// <returns></returns>
+        private bool IsVanillaResponse(List<VanillaResponse> vanilla)
+        {
+            if (vanilla != null && vanilla.Count > 0 && vanilla.FirstOrDefault().res != null)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Brute force approach
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        private dynamic DissectJson(string json)
+        {
+            if (json.Contains(val))
+            {
+                string v = Quote + val + Quote + ":";
+                string[] sa = { v };
+                sa = json.Split(sa, System.StringSplitOptions.RemoveEmptyEntries);
+                if (sa.Count() == 2)
+                    return sa[1].Substring(1, sa[1].Length - 1);
+                else if (sa.Count() == 1)
+                    return sa[0].Substring(1, sa[0].Length - 1);
+                else
+                    return json;
+            }
+            else
+                return json;
+        }
     }
 }
 

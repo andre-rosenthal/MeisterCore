@@ -12,9 +12,65 @@ using System.Text;
 using RestSharp;
 using System.Threading.Tasks;
 using static MeisterCore.Support.MeisterSupport;
+using MeisterCore.Support;
 
 namespace MeisterCore
 {
+    /// <summary>
+    /// generic dynamic implementation 
+    /// </summary>
+    public partial class Resource
+    {
+        private Resource<dynamic, dynamic> resource { get; set; }
+        /// <summary>
+        /// empty ctor
+        /// </summary>
+        internal Resource()
+        {
+            resource = new Resource<dynamic, dynamic>();
+        }
+        /// <summary>
+        /// ctor with Uri and Credentials
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="cretendials"></param>
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials) : base()
+        {
+            resource = new Resource<dynamic, dynamic>(uri, cretendials);
+        }
+        /// <summary>
+        /// Full ctor
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="cretendials"></param>
+        /// <param name="extensions"></param>
+        /// <param name="options"></param>
+        /// <param name="authentication"></param>
+        /// <param name="runtimeOptions"></param>
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
+        {
+            resource = new Resource<dynamic, dynamic>(uri, cretendials, extensions, options, authentication, runtimeOptions);
+        }
+        /// <summary>
+        /// Authenticator
+        /// </summary>
+        /// <returns></returns>
+        public bool Authenticate()
+        {
+            return resource.Authenticate();
+        }
+        /// <summary>
+        /// Execute in pure dynamic
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="req"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public dynamic Execute(string endpoint, dynamic req, Uri callback = null)
+        {
+            return resource.Execute(endpoint, req, callback);
+        }
+    }
     public partial class Resource<REQ,RES>
     {
         private AuthenticationHeaderValue Credentials { get; set; }
@@ -61,7 +117,7 @@ namespace MeisterCore
             Extensions = extensions;
             Meister.SetExtensions(Extensions);
             Options = options;
-            if (Options == MeisterOptions.UseODataV4)
+            if (options.HasFlag(MeisterOptions.UseODataV4))
                 Meister.Configure(uri, Protocols.ODataV4);
             else
                 Meister.Configure(uri, Protocols.ODataV2);
@@ -87,42 +143,10 @@ namespace MeisterCore
             if (Meister.IsAutheticated)
             {
                 ConstructParm(callback);
-                if (Options == MeisterOptions.UseODataV4)
-                    return ExecuteUnderODataV4Async(endpoint, req, callback);
-                else
-                    return ExecuteUnderODataV2(endpoint, req, callback);
+                return Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
             }
             else
                 throw new MeisterException("First call the Authentication process, then call Execute.");            
-        }
-        /// <summary>
-        /// Executing the call under OData v2
-        /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        private dynamic ExecuteUnderODataV2(string endpoint, REQ req, Uri callback)
-        {
-            var d = Meister.ExecuteODataV2<REQ, RES>(endpoint, req, Parm, RuntimeOption);
-            OD2Body<RES> od2 = d.Result as OD2Body<RES>;
-            ResultOD2 result = od2.d.results[0] as ResultOD2;
-            if (result == null)
-                return null;           
-            var res = JsonConvert.DeserializeObject<IEnumerable<RES>>(result.Json);
-            if (res == null)
-                return null;
-            return res;
-        }
-        /// <summary>
-        /// OData v4 runtime
-        /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="req"></param>
-        /// <param name="callback"></param>
-        /// <returns></returns>
-        private dynamic ExecuteUnderODataV4Async(string endpoint, REQ req, Uri callback)
-        {
-            return Meister.ExecuteODataV4<REQ,RES>(endpoint, req, Parm, RuntimeOption);
         }
         /// <summary>
         /// Set the parameters for Meister runtime
@@ -131,8 +155,8 @@ namespace MeisterCore
         private void ConstructParm(Uri callback)
         {
             foreach (MeisterOptions value in Enum.GetValues(typeof(MeisterOptions)))
-                if ((Options & value) == value)
-                    switch (Options)
+               if (Options.HasFlag(value))
+                    switch (value)
                     {
                         case MeisterOptions.TestRun:
                             Parm.Testrun = Abap_true;
@@ -164,6 +188,7 @@ namespace MeisterCore
                                 Parm.Compression = Parameters.Outbound;
                             break;
                     }
+ 
         }
     }
 }
