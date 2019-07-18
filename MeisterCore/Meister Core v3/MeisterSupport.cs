@@ -191,7 +191,9 @@ namespace MeisterCore.Support
         public enum AuthenticationModes
         {
             Basic = 0,
-            OAuth = 1
+            OAuth = 1,
+            JWT = 2,
+            SAML2 = 3
         }
         /// <summary>
         /// Meister options

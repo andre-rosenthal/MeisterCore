@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>3.0.7.19</Version>
+    <Description>Meister Core for .Net Core 2.1
+Meister V2.x
+Meister V3</Description>
+    <Copyright>Gateway Architects, LLC</Copyright>
+    <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 4.72</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>www.meisterapplications.com</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\MeisterCore\Meister Core v3\Meister.cs" Link="Linked Sources\Meister.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\MeisterException.cs" Link="Linked Sources\MeisterException.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\MeisterSupport.cs" Link="Linked Sources\MeisterSupport.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\Parameters.cs" Link="Linked Sources\Parameters.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\Resource.cs" Link="Linked Sources\Resource.cs" />
+    <Compile Include="..\MeisterCore\Patterns\Singleton.cs" Link="Linked Sources\Singleton.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Linked Sources\" />
+  </ItemGroup>
+
+</Project>

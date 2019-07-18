@@ -27,12 +27,13 @@ namespace MeisterCore
         private const string MeisterHostOD4 = @"/sap/opu/odata4/meister/od4grp/default/meister/od4/0001/";
         private const string ExecuteMeister = @"Execute";
         private const string TokenFetch = @"Requests";
-        private const string metadata = @"$metadata?sap-statistics=true";
-        private const string InJson = "&$format=json";
+        private const string metadata = @"$metadata";
         private const string Content = "Json";
         private const string EndPoint = "Endpoint";
         private const string Parms = "Parms";
         private const string csrf = "x-csrf-token";
+        private const string sap_client_suffix_additional = "&sap-client=";
+        private const string sap_client_suffix_unique = "?sap-client=";
         public Protocols ODataProtocol { get; set; }
         public Uri Uri { get; set; }
         public bool IsAutheticated { get; set; }
@@ -40,9 +41,12 @@ namespace MeisterCore
         private string password;
         private string accessToken;
         private string tokenType;
+        private string sap_client;
+        private bool SapClientOK;
         private string CsrfToken { get; set; }
         private MeisterExtensions Extensions { get; set; }
         private static readonly RestClient Client = new RestClient();
+        public string RawJsonResponse { get; set; }
         /// <summary>
         /// Ctor 
         /// </summary>
@@ -53,9 +57,11 @@ namespace MeisterCore
         /// Configuration step ..
         /// </summary>
         /// <param name="uri"></param>
-        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2)
+        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null)
         {
             ODataProtocol = prot;
+            this.sap_client = sap_client;
+            SapClientOK = IsSuffixedSapClientNeeded();
             CsrfToken = string.Empty;
             if (prot == Protocols.ODataV2)
                 Uri = new Uri(uri.AbsoluteUri + MeisterHostOD2);
@@ -73,61 +79,73 @@ namespace MeisterCore
         /// <returns></returns>
         internal bool Authenticate<REQ, RES>(AuthenticationModes authentications, AuthenticationHeaderValue credentials)
         {
-            if (authentications == AuthenticationModes.Basic && !IsAutheticated)
+            switch (authentications)
             {
-                string authHeader = credentials.Parameter;
-                if (authHeader != null)
-                {
-                    string encodedUsernamePassword = authHeader.Trim();
-                    Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-                    string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                    int seperatorIndex = usernamePassword.IndexOf(':');
-                    username = usernamePassword.Substring(0, seperatorIndex);
-                    password = usernamePassword.Substring(seperatorIndex + 1);
-                    IAuthenticator authenticator = Client.Authenticator = new HttpBasicAuthenticator(username, password);
-                    if (authenticator != null)
+                case AuthenticationModes.Basic:
+                    if (!IsAutheticated)
                     {
-                        var request = new RestRequest(Method.GET);
-                        request.Resource = metadata;
-                        request.AddHeader(csrf, "Fetch");
-                        IRestResponse response = Client.Execute(request);
-                        if (HttpResponseInValidRange(response.StatusCode))
-                            IsAutheticated = true;
-                        return response.ResponseStatus == ResponseStatus.Completed;
-                    }
-                }
-                else
-                    throw new MeisterException("The authorization header is either empty or isn't Basic");
-            }
-            else
-            {
-                if (authentications == AuthenticationModes.OAuth && !IsAutheticated)
-                {
-                    string authHeader = credentials.Parameter;
-                    if (authHeader != null)
-                    {
-                        string encodedUsernamePassword = authHeader.Substring("Token ".Length).Trim();
-                        Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-                        string accesstokentype = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                        int seperatorIndex = accesstokentype.IndexOf(':');
-                        accessToken = accesstokentype.Substring(0, seperatorIndex);
-                        tokenType = accesstokentype.Substring(seperatorIndex + 1);
-                        IAuthenticator authenticator = Client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, tokenType);
-                        if (authenticator != null)
+                        string authHeader = credentials.Parameter;
+                        if (authHeader != null)
                         {
-                            var request = new RestRequest(Method.GET);
-                            request.Resource = metadata;
-                            request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
-                            request.AddHeader("Accept", "application/json");
-                            IRestResponse response = Client.Execute(request);
-                            if (HttpResponseInValidRange(response.StatusCode))
-                                IsAutheticated = true;
-                            return response.ResponseStatus == ResponseStatus.Completed;
+                            string encodedUsernamePassword = authHeader.Trim();
+                            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+                            string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+                            int seperatorIndex = usernamePassword.IndexOf(':');
+                            username = usernamePassword.Substring(0, seperatorIndex);
+                            password = usernamePassword.Substring(seperatorIndex + 1);
+                            IAuthenticator authenticator = Client.Authenticator = new HttpBasicAuthenticator(username, password);
+                            if (authenticator != null)
+                            {
+                                var request = new RestRequest(Method.GET);
+                                DoMetadataAllocation(request, metadata);
+                                request.AddHeader(csrf, "Fetch");
+                                IRestResponse response = Client.Execute(request);
+                                if (HttpResponseInValidRange(response.StatusCode))
+                                    IsAutheticated = true;
+                                return response.ResponseStatus == ResponseStatus.Completed;
+                            }
+                        }
+                        else
+                            throw new MeisterException("The authorization header is either empty or isn't Basic");
+                    }
+                    else
+                        return true;
+                    break;
+                case AuthenticationModes.OAuth:
+                    if (!IsAutheticated)
+                    {
+                        string authHeader = credentials.Parameter;
+                        if (authHeader != null)
+                        {
+                            string encodedUsernamePassword = authHeader.Substring("Token ".Length).Trim();
+                            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+                            string accesstokentype = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+                            int seperatorIndex = accesstokentype.IndexOf(':');
+                            accessToken = accesstokentype.Substring(0, seperatorIndex);
+                            tokenType = accesstokentype.Substring(seperatorIndex + 1);
+                            IAuthenticator authenticator = Client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, tokenType);
+                            if (authenticator != null)
+                            {
+                                var request = new RestRequest(Method.GET);
+                                DoMetadataAllocation(request, metadata);
+                                request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
+                                request.AddHeader("Accept", "application/json");
+                                IRestResponse response = Client.Execute(request);
+                                if (HttpResponseInValidRange(response.StatusCode))
+                                    IsAutheticated = true;
+                                return response.ResponseStatus == ResponseStatus.Completed;
+                            }
                         }
                     }
-                }
-                else
-                    throw new MeisterException("The authorization header is either empty or isn't OAuth2");
+                    else
+                        throw new MeisterException("The authorization header is either empty or isn't OAuth2");
+                    break;
+                case AuthenticationModes.JWT:
+                    break;
+                case AuthenticationModes.SAML2:
+                    break;
+                default:
+                    break;
             }
             return false;
         }
@@ -166,6 +184,8 @@ namespace MeisterCore
                 return null;
             else if (string.IsNullOrEmpty(od4.odatacontext) && runtimeOption == RuntimeOptions.ExecuteSync)
                 throw new MeisterException(od4.value);
+            else if (string.IsNullOrEmpty(od4.odatacontext) && string.IsNullOrEmpty(od4.value))
+                throw new MeisterException(od4.value);
             else
                 try
                 {
@@ -199,7 +219,7 @@ namespace MeisterCore
             if (string.IsNullOrEmpty(CsrfToken))
             {
                 request = new RestRequest(Method.GET);
-                request.Resource = TokenFetch;
+                DoResourceAllocation(request, TokenFetch);
                 request.AddHeader(csrf, "Fetch");
                 Client.CookieContainer = new CookieContainer();
                 IRestResponse resp = Client.Execute(request);
@@ -216,7 +236,7 @@ namespace MeisterCore
             request.RequestFormat = DataFormat.Json;
             var body = new Body<REQ>(endpoint, parm, req);
             var bodycall = new BodyCall();
-            request.Resource = ExecuteMeister;
+            DoResourceAllocation(request, ExecuteMeister);
             bodycall.Parms = PerformExtensions<Parameters>(body.Parms);
             bodycall.Parms = Unescape(bodycall.Parms);
             bodycall.Endpoint = body.Endpoint;
@@ -299,7 +319,7 @@ namespace MeisterCore
         private OD2Body<RES> ExecuteODataV2Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
             RestRequest request = new RestRequest(Method.GET);
-            request.Resource = ExecuteMeister;
+            DoResourceAllocation(request, ExecuteMeister);
             request.AddQueryParameter(EndPoint, InQuotes(endpoint));
             request.AddQueryParameter(Parms, InQuotes(PerformExtensions<Parameters>(parm)));
             if (options.HasFlag(MeisterOptions.CompressionsOutbound))
@@ -407,6 +427,7 @@ namespace MeisterCore
         /// <returns></returns>
         private dynamic VanillaProcess<RES>(string json)
         {
+            RawJsonResponse = json;
             try
             {
                 List<VanillaResponse<RES>> vanilla = JsonConvert.DeserializeObject<List<VanillaResponse<RES>>>(json);
@@ -516,6 +537,51 @@ namespace MeisterCore
             else
                 return json;
         }
+        /// <summary>
+        /// Checks if there is need to suffix with the SAP client number
+        /// </summary>
+        /// <returns></returns>
+        private bool IsSuffixedSapClientNeeded()
+        {
+            short client = 0;
+            if (!String.IsNullOrEmpty(sap_client))
+                return Int16.TryParse(sap_client, out client) ;
+            else
+                return false;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="resource"></param>
+        private void DoMetadataAllocation(RestRequest request, string metadata)
+        {
+            string res = metadata;
+            if (SapClientOK)
+                res = AddSAPClient(metadata,true);
+            request.Resource = res;
+        }
+        /// <summary>
+        /// Adds the resource to the request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="resource"></param>
+        private void DoResourceAllocation(RestRequest request, string resource)
+        {
+            string res = resource;
+            if (SapClientOK)
+                res = AddSAPClient(resource);
+            request.Resource = res;
+        }
+        private string AddSAPClient(string resource, bool meta = false)
+        {
+            if (SapClientOK)
+                if (resource.Contains('&'))
+                    return resource + sap_client_suffix_additional + sap_client;
+                else
+                    return resource + sap_client_suffix_unique + sap_client;
+            else
+                return resource;
+        }
     }
 }
-

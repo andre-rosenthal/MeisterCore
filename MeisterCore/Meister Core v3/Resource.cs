@@ -34,9 +34,9 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client);
         }
         /// <summary>
         /// Full ctor
@@ -47,9 +47,9 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="runtimeOptions"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials, extensions, options, authentication, runtimeOptions);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client, extensions, options, authentication, runtimeOptions);
         }
         /// <summary>
         /// Authenticator
@@ -70,6 +70,14 @@ namespace MeisterCore
         {
             return resource.Execute(endpoint, req, callback);
         }
+        /// <summary>
+        /// gets the raw json
+        /// </summary>
+        /// <returns></returns>
+        public string GetRawJson()
+        {
+            return Meister.Instance.RawJsonResponse;
+        }
     }
     public partial class Resource<REQ,RES>
     {
@@ -80,9 +88,12 @@ namespace MeisterCore
         private MeisterExtensions Extensions { get; set; }
         private RuntimeOptions RuntimeOption { get; set; }
         private AuthenticationModes Authentications { get; set; }
+
+        private string SAPClientNo { get; set; }
         /// <summary>
         /// Base ctor ...
         /// </summary>
+        ///
         internal Resource()
         {
         }
@@ -91,14 +102,15 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials): base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null): base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();
             Authentications = AuthenticationModes.Basic;
             Credentials = cretendials;
             RuntimeOption = RuntimeOptions.ExecuteAsync;
-            Meister.Configure(uri, Protocols.ODataV2);
+            SAPClientNo = sap_client;
+            Meister.Configure(uri, Protocols.ODataV2, sap_client);
         }
         /// <summary>
         /// Full Constructor
@@ -107,7 +119,7 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();
@@ -117,10 +129,11 @@ namespace MeisterCore
             Extensions = extensions;
             Meister.SetExtensions(Extensions);
             Options = options;
+            SAPClientNo = sap_client;
             if (options.HasFlag(MeisterOptions.UseODataV4))
-                Meister.Configure(uri, Protocols.ODataV4);
+                Meister.Configure(uri, Protocols.ODataV4, sap_client);
             else
-                Meister.Configure(uri, Protocols.ODataV2);
+                Meister.Configure(uri, Protocols.ODataV2, sap_client);
         }
         /// <summary>
         /// Authenticate the specified userid and password if using basic authentication
@@ -131,6 +144,14 @@ namespace MeisterCore
                 return Meister.Authenticate<REQ,RES>(Authentications, Credentials);
             else
                 throw new MeisterException("AuthenticationHeaderValue is not set");
+        }
+        /// <summary>
+        /// gets the raw json
+        /// </summary>
+        /// <returns></returns>
+        public string GetRawJson()
+        {
+            return Meister.Instance.RawJsonResponse;
         }
         /// <summary>
         /// Direct execution of call returning always as dynamic 

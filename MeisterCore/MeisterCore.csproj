@@ -3,24 +3,26 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Gateway Architects</Authors>
     <Company>Gateway Architects</Company>
     <Product>Meister V3.0 and Meister V2.x</Product>
     <Description>Meister V3.0 Core Nuget Package
 Meister V2.x Core Nuger Package</Description>
     <Copyright>Gateway Architects</Copyright>
-    <PackageLicenseUrl>http://www.gameister.com</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MeisterCoreV2.pfx</AssemblyOriginatorKeyFile>
-    <PackageProjectUrl>http://www.gameister.com</PackageProjectUrl>
+    <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.0.1.25</Version>
-    <PackageReleaseNotes>Version 3.0.1.25</PackageReleaseNotes>
-    <AssemblyVersion>3.0.1.25</AssemblyVersion>
-    <FileVersion>3.0.1.25</FileVersion>
+    <Version>3.0.7.19</Version>
+    <PackageReleaseNotes>Version 3.0.7.6
+Based on .Net 4.72</PackageReleaseNotes>
+    <AssemblyVersion>3.0.7.19</AssemblyVersion>
+    <FileVersion>3.0.7.19</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+    <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -38,9 +40,9 @@ Meister V2.x Core Nuger Package</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NuGet.Client" Version="4.2.0" />
-    <PackageReference Include="RestSharp" Version="106.6.9" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
   </ItemGroup>
 
   <ItemGroup>

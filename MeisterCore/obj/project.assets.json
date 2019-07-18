@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.7.2": {
-      "Newtonsoft.Json/12.0.1": {
+      "Newtonsoft.Json/12.0.2": {
         "type": "package",
         "compile": {
           "lib/net45/Newtonsoft.Json.dll": {}
@@ -144,7 +144,7 @@
           "lib/net45/NuGet.Versioning.dll": {}
         }
       },
-      "RestSharp/106.6.9": {
+      "RestSharp/106.6.10": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Web"
@@ -159,47 +159,38 @@
     }
   },
   "libraries": {
-    "Newtonsoft.Json/12.0.1": {
-      "sha512": "jmVyoEyk0In8r+AObYQyFKVFm7uSRzE0XSHSbEtBJcZDMV6DqJoyB4FLcHwprPVhAh826so0db3DIKXVnpGoPA==",
+    "Newtonsoft.Json/12.0.2": {
+      "sha512": "rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA==",
       "type": "package",
-      "path": "newtonsoft.json/12.0.1",
+      "path": "newtonsoft.json/12.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "lib/net20/Newtonsoft.Json.dll",
-        "lib/net20/Newtonsoft.Json.pdb",
         "lib/net20/Newtonsoft.Json.xml",
         "lib/net35/Newtonsoft.Json.dll",
-        "lib/net35/Newtonsoft.Json.pdb",
         "lib/net35/Newtonsoft.Json.xml",
         "lib/net40/Newtonsoft.Json.dll",
-        "lib/net40/Newtonsoft.Json.pdb",
         "lib/net40/Newtonsoft.Json.xml",
         "lib/net45/Newtonsoft.Json.dll",
-        "lib/net45/Newtonsoft.Json.pdb",
         "lib/net45/Newtonsoft.Json.xml",
         "lib/netstandard1.0/Newtonsoft.Json.dll",
-        "lib/netstandard1.0/Newtonsoft.Json.pdb",
         "lib/netstandard1.0/Newtonsoft.Json.xml",
         "lib/netstandard1.3/Newtonsoft.Json.dll",
-        "lib/netstandard1.3/Newtonsoft.Json.pdb",
         "lib/netstandard1.3/Newtonsoft.Json.xml",
         "lib/netstandard2.0/Newtonsoft.Json.dll",
-        "lib/netstandard2.0/Newtonsoft.Json.pdb",
         "lib/netstandard2.0/Newtonsoft.Json.xml",
         "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.pdb",
         "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
-        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.pdb",
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
-        "newtonsoft.json.12.0.1.nupkg.sha512",
+        "newtonsoft.json.12.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
       ]
     },
     "NuGet.Client/4.2.0": {
-      "sha512": "sClPHHX9FSWs1SQtMzNLdrZqI0wC4pZGhv7FMwinv3XSos7Lx7Zqn96xSacAnK2mGvibC/kHoez1lcgQ+czCtg==",
+      "sha512": "VP9/TEK6kLD1lIvqxzR17kKwLjolZWK0xO5oale50yUOWQXjZQA9yMF9geIeiKUqL+VOi5MPnqlTFTDFN6UHPw==",
       "type": "package",
       "path": "nuget.client/4.2.0",
       "files": [
@@ -214,7 +205,7 @@
       ]
     },
     "NuGet.Common/4.2.0": {
-      "sha512": "JyNeaHUQYgyNKeiBNMIQijiUWVU+UfCj5VhFrhZqhNac6pvR15FtdFxa0tc+h0t7TxqmCz51u96b6zu49SdCMg==",
+      "sha512": "+FSE9AJEZ+Uhn0zTEEyLJwe+O64v15tC2z2v92QUlDbSRYWu10NLSsOFYiSQAIU6rS7gwq18dHvnkGuTsk1OaA==",
       "type": "package",
       "path": "nuget.common/4.2.0",
       "files": [
@@ -229,7 +220,7 @@
       ]
     },
     "NuGet.ContentModel/4.2.0": {
-      "sha512": "48mN9tc9lUEbghF4u6jDquixd0vqjI15lIP8rlZ0dWgFnDDiMX2iKDtjHZ6ZSo+V3CIXUQl3HEQWRJndtz+Jbg==",
+      "sha512": "liWh0B5zb6KfzBKlXNygya1apQ3VBvs5PG/IGHrePWkmw+NVo8XRG3/wdIwcTkKAqQPrgXzupSTzhdIWq0LG7w==",
       "type": "package",
       "path": "nuget.contentmodel/4.2.0",
       "files": [
@@ -244,7 +235,7 @@
       ]
     },
     "NuGet.Frameworks/4.2.0": {
-      "sha512": "T4VNyinZ5MaPGEZaCwEioHJ/6KlqEw6VswISE4Ywfm3hEcvrnNBvThcoil7exUiJY9F7wjNZG60tnWbyDNKNVA==",
+      "sha512": "NVi3p3v5qFF97FKrhjhWvWwYMUvxbAs2aeCXwYaQF6XEGnpjrDtmVz99DXfDgtc9ArH5MyOOyTiolnK+YxO02Q==",
       "type": "package",
       "path": "nuget.frameworks/4.2.0",
       "files": [
@@ -261,7 +252,7 @@
       ]
     },
     "NuGet.Packaging/4.2.0": {
-      "sha512": "jZnay64tBADONIpVVDtJjzBOv5Ts56Rbj8ar4IXnJ8KeVUnuGc91sFJGcmVaNDBK5FTbfo7FeSA9Ht1qzueq4A==",
+      "sha512": "PMa0HV/AIY9dXdTFf2mZ1+JnxM9/y3+Fohyg4NCDoJ4Z7s1qjuFQoMGVLI3f2sfFFQUhuXN+t0hOfgZAx8Dgmg==",
       "type": "package",
       "path": "nuget.packaging/4.2.0",
       "files": [
@@ -276,7 +267,7 @@
       ]
     },
     "NuGet.Packaging.Core/4.2.0": {
-      "sha512": "3KO89a737nX504Rq53s6KtOHhj/bgDAzZfedJcY+FSAwgZqFCRTcg6uiuGi+1vfw1yX+a+1CtotVZiA5qq4O6A==",
+      "sha512": "3NWD2hYD7eP1iEcGHekTfzrZYYevUVT2juL8VjWIV11AZGym5l4RibkLJwyBAI4Qhw4s+Dk/8WGmgWbsBxQzUw==",
       "type": "package",
       "path": "nuget.packaging.core/4.2.0",
       "files": [
@@ -291,7 +282,7 @@
       ]
     },
     "NuGet.Packaging.Core.Types/4.2.0": {
-      "sha512": "xYQTHwz1wXq3nQ0zhvh7wWOXeNLbMSH2Pl3H4V56QbzHlVoY6q+l72lIkaE/LHF96wTWCRYDkwLo/hGsQ6xPgQ==",
+      "sha512": "Zv+s9hhUTIOit/PDmCEx7v+rjv0DwhzwbzIGynKdQtr6x3Y/sQGO0A7/Kw4zKUyykAUezbe7pnd+w+K5Llqy2A==",
       "type": "package",
       "path": "nuget.packaging.core.types/4.2.0",
       "files": [
@@ -306,7 +297,7 @@
       ]
     },
     "NuGet.Repositories/4.2.0": {
-      "sha512": "Z665IKL7Ssc1yWNryJBByYX2tLZfchow7UIBfYQRCfZMjQ+j4qUXgbtwHr9cDdiUwY5AFv2sQjY/P90yywhpwA==",
+      "sha512": "0lIOFBp46TR4LZ4iqePm2Dh41Mz2NFWinnZya4Jdou8GN5A/eqm1qpkJV0GnHtGFTWGfoR/cZE452cwwWWG6xQ==",
       "type": "package",
       "path": "nuget.repositories/4.2.0",
       "files": [
@@ -321,7 +312,7 @@
       ]
     },
     "NuGet.RuntimeModel/4.2.0": {
-      "sha512": "szvReFMlVt/QKQ/nB0xsEN4KneD0RIiTQy0gKxDzAqB+kxDNow/fq019wbBJ3J93lWuQ1/H36Y0ieLv5LgbPbw==",
+      "sha512": "3SGCvEmgMSWwEkcI6KTCOfeso52Ny6/m2JCHQLnHjE0HaWshAbOZW8rUiPJlsDaRr9dI7VgUvMGE3DVdMYR/TA==",
       "type": "package",
       "path": "nuget.runtimemodel/4.2.0",
       "files": [
@@ -336,7 +327,7 @@
       ]
     },
     "NuGet.Versioning/4.2.0": {
-      "sha512": "mL7GtGpAC3I9VxuU8aLM5JYDEqswspEuTj4nArC+iYeoO3df8Ncgf28H0VYkLHPntlLmqgupg+rqoaXfpnq5jQ==",
+      "sha512": "wr5pplZFz2uiEZsCmm9DZNhzValXq6ZhV2MgXRIJEqbnXmPprrh9QkbgAxBmVs28QR3dfp0GDVVG21bnzgo+Hg==",
       "type": "package",
       "path": "nuget.versioning/4.2.0",
       "files": [
@@ -350,51 +341,52 @@
         "nuget.versioning.nuspec"
       ]
     },
-    "RestSharp/106.6.9": {
-      "sha512": "8RNSrGB8OJqkVnUno0amSL1dsTXGkqVjRvpgwhDR1cy4xhwc/6PWAJFiz6B5cnwmCB9aYMGaHrgKfTt6iMziqw==",
+    "RestSharp/106.6.10": {
+      "sha512": "x1FM32hjnVOIn+DKtCs2Y4Q2DCUE5KW08NUXUd4GjgKjE+5PE0F6e9XfUg7nILo05M0TA/HRkRD/SeQ8+duOUA==",
       "type": "package",
-      "path": "restsharp/106.6.9",
+      "path": "restsharp/106.6.10",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "lib/net452/RestSharp.dll",
         "lib/net452/RestSharp.xml",
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.106.6.9.nupkg.sha512",
+        "restsharp.106.6.10.nupkg.sha512",
         "restsharp.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.7.2": [
-      "Newtonsoft.Json >= 12.0.1",
+      "Newtonsoft.Json >= 12.0.2",
       "NuGet.Client >= 4.2.0",
-      "RestSharp >= 106.6.9"
+      "RestSharp >= 106.6.10"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Daniel Rosenthal\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.0.1.25",
+    "version": "3.0.7.19",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Daniel Rosenthal\\Documents\\GitHub\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "projectUniqueName": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
-      "projectPath": "C:\\Users\\Daniel Rosenthal\\Documents\\GitHub\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
-      "packagesPath": "C:\\Users\\Daniel Rosenthal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Daniel Rosenthal\\Documents\\GitHub\\MeisterCore\\MeisterCore\\obj\\",
+      "projectPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "packagesPath": "C:\\Users\\MeisterAdmin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Daniel Rosenthal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\MeisterAdmin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net472"
@@ -419,7 +411,7 @@
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",
-            "version": "[12.0.1, )"
+            "version": "[12.0.2, )"
           },
           "NuGet.Client": {
             "target": "Package",
@@ -427,7 +419,7 @@
           },
           "RestSharp": {
             "target": "Package",
-            "version": "[106.6.9, )"
+            "version": "[106.6.10, )"
           }
         }
       }
