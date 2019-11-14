@@ -365,28 +365,21 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "3.0.7.19",
     "restore": {
-      "projectUniqueName": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "projectUniqueName": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
-      "projectPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "projectPath": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "packagesPath": "C:\\Users\\MeisterAdmin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\obj\\",
+      "outputPath": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
         "C:\\Users\\MeisterAdmin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net472"
@@ -421,7 +414,8 @@
             "target": "Package",
             "version": "[106.6.10, )"
           }
-        }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
