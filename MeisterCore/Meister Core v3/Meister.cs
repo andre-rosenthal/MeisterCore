@@ -102,7 +102,7 @@ namespace MeisterCore
                                 IRestResponse response = Client.Execute(request);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return response.ResponseStatus == ResponseStatus.Completed;
+                                return IsAutheticated;
                             }
                         }
                         else
@@ -133,7 +133,7 @@ namespace MeisterCore
                                 IRestResponse response = Client.Execute(request);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return response.ResponseStatus == ResponseStatus.Completed;
+                                return IsAutheticated;
                             }
                         }
                     }
