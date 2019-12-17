@@ -34,9 +34,9 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.EN ) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client,language);
         }
         /// <summary>
         /// Full ctor
@@ -47,9 +47,9 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="runtimeOptions"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.EN ) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client, extensions, options, authentication, runtimeOptions);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client, extensions, options, authentication, runtimeOptions, language);
         }
         /// <summary>
         /// Authenticator
@@ -88,7 +88,7 @@ namespace MeisterCore
         private MeisterExtensions Extensions { get; set; }
         private RuntimeOptions RuntimeOption { get; set; }
         private AuthenticationModes Authentications { get; set; }
-
+        private Languages SapLanguage { get; set; }
         private string SAPClientNo { get; set; }
         /// <summary>
         /// Base ctor ...
@@ -102,7 +102,7 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null): base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.EN ): base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();
@@ -110,7 +110,8 @@ namespace MeisterCore
             Credentials = cretendials;
             RuntimeOption = RuntimeOptions.ExecuteAsync;
             SAPClientNo = sap_client;
-            Meister.Configure(uri, Protocols.ODataV2, sap_client);
+            SapLanguage = language;
+            Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
         }
         /// <summary>
         /// Full Constructor
@@ -119,7 +120,7 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.EN ) : base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();
@@ -130,10 +131,11 @@ namespace MeisterCore
             Meister.SetExtensions(Extensions);
             Options = options;
             SAPClientNo = sap_client;
+            SapLanguage = language;
             if (options.HasFlag(MeisterOptions.UseODataV4))
-                Meister.Configure(uri, Protocols.ODataV4, sap_client);
+                Meister.Configure(uri, Protocols.ODataV4, sap_client,language);
             else
-                Meister.Configure(uri, Protocols.ODataV2, sap_client);
+                Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
         }
         /// <summary>
         /// Authenticate the specified userid and password if using basic authentication
@@ -163,8 +165,16 @@ namespace MeisterCore
         {
             if (Meister.IsAutheticated)
             {
-                ConstructParm(callback);
-                return Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
+                try
+                {
+                    ConstructParm(callback);
+                    return Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
+                }
+                catch (Exception)
+                {
+
+                    return null;
+                }
             }
             else
                 throw new MeisterException("First call the Authentication process, then call Execute.");            

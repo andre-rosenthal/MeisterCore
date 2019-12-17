@@ -19,7 +19,7 @@ namespace MeisterCore.Support
     /// </summary>
     [JsonObject("VanillaResponse")]
     public partial class VanillaResponse<RES>
-    { 
+    {
         [JsonProperty("type")]
         public string type { get; set; }
         [JsonProperty("val")]
@@ -165,6 +165,45 @@ namespace MeisterCore.Support
     /// </summary>
     public class MeisterSupport
     {
+        [Flags]
+        /// <summary>
+        /// SAP languages
+        /// </summary>
+        public enum Languages
+        {
+            AR,
+            BG,
+            CS,
+            DA,
+            DE,
+            EL,
+            EN,
+            ES,
+            FI,
+            FR,
+            HE,
+            HI,
+            HR,
+            HU,
+            IT,
+            JA,
+            KO,
+            NL,
+            NO,
+            PL,
+            PT,
+            RO,
+            RU,
+            SH,
+            SK,
+            SL,
+            SV,
+            TH,
+            TR,
+            Z1,
+            ZF,
+            ZH
+        }
         /// <summary>
         /// Protocols
         /// </summary>
@@ -209,6 +248,8 @@ namespace MeisterCore.Support
             AsyncMode = 32,
             QuequeMode = 64,
             UseCallback = 128,
+            UseDelegate = 256,
+            UseWebSocket = 512,
         }
         /// <summary>
         /// Runtime options 
@@ -218,6 +259,7 @@ namespace MeisterCore.Support
         {
             ExecuteSync = 0,
             ExecuteAsync = 1,
+            ExecuteDelegate = 2,
         }
         public const string Abap_true = "X";
         public const string val = "val";

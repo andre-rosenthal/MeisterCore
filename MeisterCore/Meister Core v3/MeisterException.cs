@@ -12,7 +12,7 @@ namespace MeisterCore
         public MeisterException() : base() { }
         public MeisterException(string message) : base(message) { }
         public MeisterException(string message, HttpStatusCode status) : base(message) { statusCode = status; }
-        public MeisterException(string message, System.Exception inner) : base(message, inner) { }
+        public MeisterException(string message, HttpStatusCode status, System.Exception inner) : base(message, inner) { statusCode = status; }
 
         protected MeisterException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }

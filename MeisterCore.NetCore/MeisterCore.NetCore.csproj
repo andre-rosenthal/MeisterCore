@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <Version>3.0.7.19</Version>
+    <Version>3.19.12.14</Version>
     <Description>Meister Core for .Net Core 3.0
 Meister V2.x
 Meister V3</Description>
     <Copyright>Gateway Architects, LLC</Copyright>
-    <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 4.72</PackageReleaseNotes>
+    <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 4.8</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>www.meisterapplications.com</PackageProjectUrl>
   </PropertyGroup>
@@ -15,6 +15,7 @@ Meister V3</Description>
   <ItemGroup>
     <Compile Include="..\MeisterCore\Meister Core v3\Meister.cs" Link="Linked Sources\Meister.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterException.cs" Link="Linked Sources\MeisterException.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\MeisterFailure.cs" Link="Linked Sources\MeisterFailure.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterSupport.cs" Link="Linked Sources\MeisterSupport.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Parameters.cs" Link="Linked Sources\Parameters.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Resource.cs" Link="Linked Sources\Resource.cs" />

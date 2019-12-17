@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETFramework,Version=v4.7.2": {
+    ".NETFramework,Version=v4.8": {
       "Newtonsoft.Json/12.0.3": {
         "type": "package",
         "compile": {
@@ -359,7 +359,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.7.2": [
+    ".NETFramework,Version=v4.8": [
       "Newtonsoft.Json >= 12.0.3",
       "NuGet.Client >= 4.2.0",
       "RestSharp >= 106.6.10"
@@ -369,7 +369,7 @@
     "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "3.0.7.19",
+    "version": "3.19.12.14",
     "restore": {
       "projectUniqueName": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
@@ -383,14 +383,14 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net472"
+        "net48"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net472": {
+        "net48": {
           "projectReferences": {}
         }
       },
@@ -401,7 +401,7 @@
       }
     },
     "frameworks": {
-      "net472": {
+      "net48": {
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",

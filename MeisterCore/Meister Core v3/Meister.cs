@@ -34,6 +34,8 @@ namespace MeisterCore
         private const string csrf = "x-csrf-token";
         private const string sap_client_suffix_additional = "&sap-client=";
         private const string sap_client_suffix_unique = "?sap-client=";
+        private const string sap_language_suffix_additional = "&sap-language=";
+        private const string sap_language_suffix_unique = "?sap-language=";
         public Protocols ODataProtocol { get; set; }
         public Uri Uri { get; set; }
         public bool IsAutheticated { get; set; }
@@ -42,9 +44,13 @@ namespace MeisterCore
         private string accessToken;
         private string tokenType;
         private string sap_client;
+
+        public Languages sap_language { get; private set; }
+
         private bool SapClientOK;
         private string CsrfToken { get; set; }
         private MeisterExtensions Extensions { get; set; }
+        private BackendFailure Failure {get;set;}
         private static readonly RestClient Client = new RestClient();
         public string RawJsonResponse { get; set; }
         /// <summary>
@@ -57,10 +63,11 @@ namespace MeisterCore
         /// Configuration step ..
         /// </summary>
         /// <param name="uri"></param>
-        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null)
+        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null, Languages sap_language = Languages.EN )
         {
             ODataProtocol = prot;
             this.sap_client = sap_client;
+            this.sap_language = sap_language;
             SapClientOK = IsSuffixedSapClientNeeded();
             CsrfToken = string.Empty;
             if (prot == Protocols.ODataV2)
@@ -90,9 +97,9 @@ namespace MeisterCore
                             string encodedUsernamePassword = authHeader.Trim();
                             Encoding encoding = Encoding.GetEncoding("iso-8859-1");
                             string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                            int seperatorIndex = usernamePassword.IndexOf(':');
-                            username = usernamePassword.Substring(0, seperatorIndex);
-                            password = usernamePassword.Substring(seperatorIndex + 1);
+                            int separatorIndex = usernamePassword.IndexOf(':');
+                            username = usernamePassword.Substring(0, separatorIndex);
+                            password = usernamePassword.Substring(separatorIndex + 1);
                             IAuthenticator authenticator = Client.Authenticator = new HttpBasicAuthenticator(username, password);
                             if (authenticator != null)
                             {
@@ -405,9 +412,21 @@ namespace MeisterCore
                 var res = JsonConvert.DeserializeObject<T>(response.Content);
                 return Task.FromResult<T>(res);
             }
-            catch (MeisterException)
+            catch (MeisterException mex)
             {
-                return null;
+                throw mex;
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    Failure = JsonConvert.DeserializeObject<BackendFailure>(response.Content);
+                    throw new MeisterException(Failure.failures.FirstOrDefault().backendMessage, HttpStatusCode.InternalServerError);
+                }
+                catch (Exception ex)
+                {
+                    throw new MeisterException("Nuget exception", HttpStatusCode.InternalServerError, ex);
+                }
             }
         }
         /// <summary>
@@ -558,7 +577,7 @@ namespace MeisterCore
         {
             string res = metadata;
             if (SapClientOK)
-                res = AddSAPClient(metadata,true);
+                res = AddSAPSuffixes(metadata,true);
             request.Resource = res;
         }
         /// <summary>
@@ -569,19 +588,27 @@ namespace MeisterCore
         private void DoResourceAllocation(RestRequest request, string resource)
         {
             string res = resource;
-            if (SapClientOK)
-                res = AddSAPClient(resource);
+            if (SapClientOK || sap_language != Languages.EN )
+                res = AddSAPSuffixes(resource);
             request.Resource = res;
         }
-        private string AddSAPClient(string resource, bool meta = false)
+        private string AddSAPSuffixes(string resource, bool meta = false)
         {
+            string suffixed = resource;
             if (SapClientOK)
-                if (resource.Contains('&'))
-                    return resource + sap_client_suffix_additional + sap_client;
+                if (suffixed.Contains('&'))
+                    suffixed += sap_client_suffix_additional + sap_client;
                 else
-                    return resource + sap_client_suffix_unique + sap_client;
-            else
-                return resource;
+                    suffixed += sap_client_suffix_unique + sap_client;
+            if (sap_language != Languages.EN)
+            {
+                string lan = Enum.GetName(typeof(Languages), sap_language);
+                if (suffixed.Contains('&'))
+                    suffixed += sap_language_suffix_additional + lan;
+                else
+                    suffixed += sap_language_suffix_unique + lan;
+            }
+            return suffixed;
         }
     }
 }
