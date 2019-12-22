@@ -19,6 +19,7 @@ Meister V3</Description>
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterSupport.cs" Link="Linked Sources\MeisterSupport.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Parameters.cs" Link="Linked Sources\Parameters.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Resource.cs" Link="Linked Sources\Resource.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\UrlSuffixes.cs" Link="Linked Sources\UrlSuffixes.cs" />
     <Compile Include="..\MeisterCore\Patterns\Singleton.cs" Link="Linked Sources\Singleton.cs" />
   </ItemGroup>
 

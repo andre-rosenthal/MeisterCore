@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -12,13 +10,13 @@ using MeisterCore.Support;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
-using static MeisterCore.Parameters;
 using static MeisterCore.Support.MeisterSupport;
 
 namespace MeisterCore
 {
     /// <summary>
-    /// Summary description for Meister Core Library Definistions - SIngleton pattern
+    /// Summary description for Meister Core Library Definistions - Singleton pattern
+    /// Suffix pattern $format=json&sap-client=NNN&sap-language=XX
     /// </summary>
     ///
     internal partial class Meister : SingletonBase<Meister>
@@ -32,10 +30,9 @@ namespace MeisterCore
         private const string EndPoint = "Endpoint";
         private const string Parms = "Parms";
         private const string csrf = "x-csrf-token";
-        private const string sap_client_suffix_additional = "&sap-client=";
-        private const string sap_client_suffix_unique = "?sap-client=";
-        private const string sap_language_suffix_additional = "&sap-language=";
-        private const string sap_language_suffix_unique = "?sap-language=";
+        private const string Format = "format";
+        private const string Sap_language = "sap-language";
+        private const string Sap_client = "sap-client";
         public Protocols ODataProtocol { get; set; }
         public Uri Uri { get; set; }
         public bool IsAutheticated { get; set; }
@@ -104,7 +101,7 @@ namespace MeisterCore
                             if (authenticator != null)
                             {
                                 var request = new RestRequest(Method.GET);
-                                DoMetadataAllocation(request, metadata);
+                                DoResourceAllocation(request, metadata);
                                 request.AddHeader(csrf, "Fetch");
                                 IRestResponse response = Client.Execute(request);
                                 if (HttpResponseInValidRange(response.StatusCode))
@@ -134,7 +131,7 @@ namespace MeisterCore
                             if (authenticator != null)
                             {
                                 var request = new RestRequest(Method.GET);
-                                DoMetadataAllocation(request, metadata);
+                                DoResourceAllocation(request, metadata);
                                 request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
                                 request.AddHeader("Accept", "application/json");
                                 IRestResponse response = Client.Execute(request);
@@ -201,7 +198,6 @@ namespace MeisterCore
                         json = Unzip(od4.value);
                     else
                         json = od4.value;
-                    json = Unescape(json);
                     json = RemoveDrefAnnotations(json);
                     return VanillaProcess<RES>(json);
                 }
@@ -222,55 +218,62 @@ namespace MeisterCore
         /// <returns></returns>
         private OD4Body<RES> ExecuteODataV4Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
-            RestRequest request = null;
-            if (string.IsNullOrEmpty(CsrfToken))
+            CancellationTokenSource cancel = null;
+            try
             {
-                request = new RestRequest(Method.GET);
-                DoResourceAllocation(request, TokenFetch);
-                request.AddHeader(csrf, "Fetch");
-                Client.CookieContainer = new CookieContainer();
-                IRestResponse resp = Client.Execute(request);
-                if (HttpResponseInValidRange(resp.StatusCode))
+                RestRequest request = null;
+                if (string.IsNullOrEmpty(CsrfToken))
                 {
-                    CsrfToken = (from h in resp.Headers where h.Name == csrf select h).FirstOrDefault().Value.ToString();
-                    request = null;
+                    request = new RestRequest(Method.GET);
+                    DoResourceAllocation(request, TokenFetch);
+                    request.AddHeader(csrf, "Fetch");
+                    Client.CookieContainer = new CookieContainer();
+                    IRestResponse resp = Client.Execute(request);
+                    if (HttpResponseInValidRange(resp.StatusCode))
+                    {
+                        CsrfToken = (from h in resp.Headers where h.Name == csrf select h).FirstOrDefault().Value.ToString();
+                        request = null;
+                    }
+                    else
+                        throw new MeisterException("Failed to obtain a Csrf-Token from Meister");
+                }
+                IRestResponse<OD4Body<RES>> response = null;
+                request = new RestRequest(Method.POST);
+                request.RequestFormat = DataFormat.Json;
+                var body = new Body<REQ>(endpoint, parm, req);
+                var bodycall = new BodyCall();
+                DoResourceAllocation(request, ExecuteMeister);
+                bodycall.Parms = PerformExtensions<Parameters>(body.Parms);
+                bodycall.Endpoint = body.Endpoint;
+                bodycall.Json = PerformExtensions<REQ>(body.Json);
+                if (options.HasFlag(MeisterOptions.CompressionsInbound))
+                    bodycall.Json = Zip(bodycall.Json);
+                string json = JsonConvert.SerializeObject(bodycall);
+                cancel = new CancellationTokenSource();
+                request.AddJsonBody(json);
+                request.AddHeader("X-Request-With", "XMLHttpRequest");
+                request.AddHeader("Accept", "*/*");
+                request.AddHeader(csrf, CsrfToken);
+                request.AddHeader("Content-Type", "application/json;odata.metadata=minimal; charset=utf-8");
+                response = null;
+                if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
+                {
+                    var task = Task.Run(async () =>
+                    {
+                        response = await Client.ExecuteTaskAsync<OD4Body<RES>>(request, cancel.Token);
+                        return response.Data;
+                    });
+                    task.Wait(cancel.Token);
+                    return task.Result;
                 }
                 else
-                    throw new MeisterException("Failed to obtain a Csrf-Token from Meister");
+                    return ExecuteSync<OD4Body<RES>>(request).Result;
             }
-            IRestResponse<OD4Body<RES>> response = null;
-            request = new RestRequest(Method.POST);
-            request.RequestFormat = DataFormat.Json;
-            var body = new Body<REQ>(endpoint, parm, req);
-            var bodycall = new BodyCall();
-            DoResourceAllocation(request, ExecuteMeister);
-            bodycall.Parms = PerformExtensions<Parameters>(body.Parms);
-            bodycall.Parms = Unescape(bodycall.Parms);
-            bodycall.Endpoint = body.Endpoint;
-            bodycall.Json = PerformExtensions<REQ>(body.Json);
-            bodycall.Json = Unescape(bodycall.Json);
-            if (options.HasFlag(MeisterOptions.CompressionsInbound))
-                bodycall.Json = Zip(bodycall.Json);
-            string json = JsonConvert.SerializeObject(bodycall);
-            CancellationTokenSource cancel = new CancellationTokenSource();
-            request.AddJsonBody(json);
-            request.AddHeader("X-Request-With", "XMLHttpRequest");
-            request.AddHeader("Accept", "*/*");
-            request.AddHeader(csrf, CsrfToken);
-            request.AddHeader("Content-Type", "application/json;odata.metadata=minimal; charset=utf-8");
-            response = null;
-            if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
+            finally
             {
-                var task = Task.Run(async () =>
-                {
-                    response = await Client.ExecuteTaskAsync<OD4Body<RES>>(request, cancel.Token);
-                    return response.Data;
-                });
-                task.Wait(cancel.Token);
-                return task.Result;
+                if (cancel != null)
+                    cancel.Dispose();
             }
-            else
-                return ExecuteSync<OD4Body<RES>>(request).Result;
         }
         /// <summary>
         /// Execute calls under OData v2
@@ -302,12 +305,44 @@ namespace MeisterCore
                             json = Unzip(list.FirstOrDefault().Json);
                         else
                             json = list.FirstOrDefault().Json;
-                        json = Unescape(json);
                         json = RemoveDrefAnnotations(json);
+                    }
+                    // first check if the backend sent a canonical failure .. if not, do nothing at the exception ..
+                    // it comes in two flavors, as an object when threw from the gateway directly or as a list when threw from the backend
+                    try
+                    {
+                        BackendFailure failure = JsonConvert.DeserializeObject<BackendFailure>(json);
+                        if (failure != null)
+                        {
+                            throw new MeisterException(failure.BackendMessage, HttpStatusCode.InternalServerError);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        try
+                        {
+                            List<BackendFailure> failures = JsonConvert.DeserializeObject<List<BackendFailure>>(json);
+                            if (failures != null && failures.Count > 0)
+                            {
+                                BackendFailure failure = failures.FirstOrDefault();
+                                if (failure.ReturnCode > 0)
+                                    throw new MeisterException(failure.BackendMessage, HttpStatusCode.InternalServerError);
+                            }
+                        }
+                        catch (MeisterException)
+                        {
+                            throw;
+                        }
+                        catch (Exception)
+                        { }
                     }
                     return VanillaProcess<RES>(json);
                 }
                 catch (MeisterException)
+                {
+                    throw;
+                }
+                catch (Exception)
                 {
                     throw new MeisterException("Unable to marshall object d[0] from OD2Body");
                 }
@@ -325,28 +360,37 @@ namespace MeisterCore
         /// <returns></returns>
         private OD2Body<RES> ExecuteODataV2Internal<REQ, RES>(string endpoint, REQ req, Parameters parm, RuntimeOptions runtimeOption, MeisterOptions options)
         {
-            RestRequest request = new RestRequest(Method.GET);
-            DoResourceAllocation(request, ExecuteMeister);
-            request.AddQueryParameter(EndPoint, InQuotes(endpoint));
-            request.AddQueryParameter(Parms, InQuotes(PerformExtensions<Parameters>(parm)));
-            if (options.HasFlag(MeisterOptions.CompressionsOutbound))
-                request.AddQueryParameter(Content, InQuotes(Zip(PerformExtensions<REQ>(req))));
-            else
-                request.AddQueryParameter(Content, InQuotes(PerformExtensions<REQ>(req)));
-            CancellationTokenSource cancel = new CancellationTokenSource();
-            IRestResponse<OD2Body<RES>> response = null;
-            if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
+            CancellationTokenSource cancel = null;
+            try
             {
-                var task = Task.Run(async () =>
+                RestRequest request = new RestRequest(Method.GET);
+                DoResourceAllocation(request, ExecuteMeister);
+                request.AddQueryParameter(EndPoint, InQuotes(endpoint));
+                request.AddQueryParameter(Parms, InQuotes(PerformExtensions<Parameters>(parm)));
+                if (options.HasFlag(MeisterOptions.CompressionsOutbound))
+                    request.AddQueryParameter(Content, InQuotes(Zip(PerformExtensions<REQ>(req))));
+                else
+                    request.AddQueryParameter(Content, InQuotes(PerformExtensions<REQ>(req)));
+                cancel = new CancellationTokenSource();
+                IRestResponse<OD2Body<RES>> response = null;
+                if (runtimeOption.HasFlag(RuntimeOptions.ExecuteAsync))
                 {
-                    response = await Client.ExecuteTaskAsync<OD2Body<RES>>(request, cancel.Token);
-                    return response.Data;
-                });
-                task.Wait(cancel.Token);
-                return task.Result;
+                    var task = Task.Run(async () =>
+                    {
+                        response = await Client.ExecuteTaskAsync<OD2Body<RES>>(request, cancel.Token);
+                        return response.Data;
+                    });
+                    task.Wait(cancel.Token);
+                    return task.Result;
+                }
+                else
+                    return ExecuteSync<OD2Body<RES>>(request).Result;
             }
-            else
-                return ExecuteSync<OD2Body<RES>>(request).Result;
+            finally
+            {
+                if (cancel != null)
+                    cancel.Dispose();
+            }
         }
         /// <summary>
         /// Set extensions at Meister runtime
@@ -364,7 +408,7 @@ namespace MeisterCore
         /// <returns></returns>
         private string PerformExtensions<T>(T t)
         {
-            string json = string.Empty;
+            string json;
             switch (Extensions)
             {
                 case MeisterExtensions.RemoveNulls:
@@ -416,16 +460,16 @@ namespace MeisterCore
             {
                 throw mex;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 try
                 {
                     Failure = JsonConvert.DeserializeObject<BackendFailure>(response.Content);
-                    throw new MeisterException(Failure.failures.FirstOrDefault().backendMessage, HttpStatusCode.InternalServerError);
+                    throw new MeisterException(Failure.BackendMessage, HttpStatusCode.InternalServerError,ex);
                 }
-                catch (Exception ex)
+                catch (Exception exe)
                 {
-                    throw new MeisterException("Nuget exception", HttpStatusCode.InternalServerError, ex);
+                    throw new MeisterException("Nuget exception", HttpStatusCode.InternalServerError, exe);
                 }
             }
         }
@@ -453,7 +497,7 @@ namespace MeisterCore
                 if (IsVanillaResponse(vanilla))
                     return vanilla.FirstOrDefault().res;
                 else
-                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                    return JsonConvert.DeserializeObject<IEnumerable<RES>>(json).FirstOrDefault();
             }
             catch (Exception)
             {
@@ -465,7 +509,7 @@ namespace MeisterCore
                     else
                         try
                         {
-                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json).FirstOrDefault();
                         }
                         catch (Exception)
                         {
@@ -482,7 +526,7 @@ namespace MeisterCore
                         else
                             try
                             {
-                                return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                                return JsonConvert.DeserializeObject<IEnumerable<RES>>(json).FirstOrDefault();
                             }
                             catch (Exception)
                             {
@@ -493,7 +537,7 @@ namespace MeisterCore
                     {
                         try
                         {
-                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json);
+                            return JsonConvert.DeserializeObject<IEnumerable<RES>>(json).FirstOrDefault();
                         }
                         catch (Exception)
                         {
@@ -569,46 +613,42 @@ namespace MeisterCore
                 return false;
         }
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="resource"></param>
-        private void DoMetadataAllocation(RestRequest request, string metadata)
-        {
-            string res = metadata;
-            if (SapClientOK)
-                res = AddSAPSuffixes(metadata,true);
-            request.Resource = res;
-        }
-        /// <summary>
         /// Adds the resource to the request
         /// </summary>
         /// <param name="request"></param>
         /// <param name="resource"></param>
         private void DoResourceAllocation(RestRequest request, string resource)
         {
-            string res = resource;
-            if (SapClientOK || sap_language != Languages.EN )
-                res = AddSAPSuffixes(resource);
-            request.Resource = res;
+            request.Resource = resource;
+            var list = AddSAPSuffixes();
+            if (list != null)
+                foreach (var p in list)
+                    request.AddParameter(p);
         }
-        private string AddSAPSuffixes(string resource, bool meta = false)
+        private List<Parameter> AddSAPSuffixes()
         {
-            string suffixed = resource;
+            Parameter p = null;
+            List<Parameter> list = new List<Parameter>();
             if (SapClientOK)
-                if (suffixed.Contains('&'))
-                    suffixed += sap_client_suffix_additional + sap_client;
-                else
-                    suffixed += sap_client_suffix_unique + sap_client;
+            {
+                p = new Parameter
+                {
+                    Name = Sap_client,
+                    Value = sap_client
+                };
+                list.Add(p);
+            }
             if (sap_language != Languages.EN)
             {
-                string lan = Enum.GetName(typeof(Languages), sap_language);
-                if (suffixed.Contains('&'))
-                    suffixed += sap_language_suffix_additional + lan;
-                else
-                    suffixed += sap_language_suffix_unique + lan;
+                p = new Parameter
+                {
+                    Name = Sap_language,
+                    Value = Enum.GetName(typeof(Languages), sap_language)
+                };
+                list.Add(p);
             }
-            return suffixed;
+            return list;
         }
+
     }
 }

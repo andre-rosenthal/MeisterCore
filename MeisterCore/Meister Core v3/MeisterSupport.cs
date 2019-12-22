@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace MeisterCore.Support
 {
-
     /// <summary>
     /// Support for vanilla ref result set
     /// </summary>
@@ -382,19 +381,6 @@ namespace MeisterCore.Support
                 }
                 return Encoding.Default.GetString(mso.ToArray(), 0, mso.ToArray().Length);
             }
-        }
-        /// <summary>
-        /// Unescape
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string Unescape(string s)
-        {
-            while (s.Contains(escaped))
-                s = s.Replace(escaped, Quote);
-            string json = s.Replace(Quote + "[", "[");
-            json = json.Replace("]" + Quote, "]");
-            return json;
         }
         #endregion
     }

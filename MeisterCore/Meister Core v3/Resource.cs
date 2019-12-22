@@ -170,9 +170,12 @@ namespace MeisterCore
                     ConstructParm(callback);
                     return Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
                 }
+                catch (MeisterException)
+                {
+                    throw;
+                }
                 catch (Exception)
                 {
-
                     return null;
                 }
             }
