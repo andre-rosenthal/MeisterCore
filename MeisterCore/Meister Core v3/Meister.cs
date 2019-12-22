@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -60,7 +61,7 @@ namespace MeisterCore
         /// Configuration step ..
         /// </summary>
         /// <param name="uri"></param>
-        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null, Languages sap_language = Languages.EN )
+        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null, Languages sap_language = Languages.CultureBased)
         {
             ODataProtocol = prot;
             this.sap_client = sap_client;
@@ -620,12 +621,13 @@ namespace MeisterCore
         private void DoResourceAllocation(RestRequest request, string resource)
         {
             request.Resource = resource;
-            var list = AddSAPSuffixes();
+            request.RequestFormat = DataFormat.Json;
+            var list = AddSAPSuffixes(request);
             if (list != null)
                 foreach (var p in list)
                     request.AddParameter(p);
         }
-        private List<Parameter> AddSAPSuffixes()
+        private List<Parameter> AddSAPSuffixes(RestRequest request)
         {
             Parameter p = null;
             List<Parameter> list = new List<Parameter>();
@@ -634,16 +636,22 @@ namespace MeisterCore
                 p = new Parameter
                 {
                     Name = Sap_client,
-                    Value = sap_client
+                    Value = sap_client,
+                    Type = ParameterType.GetOrPost
                 };
                 list.Add(p);
             }
-            if (sap_language != Languages.EN)
+            if (sap_language != Languages.CultureBased)
             {
+                var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+                foreach (var item in cultures)
+                    if (item.TwoLetterISOLanguageName.ToUpper() == Enum.GetName(typeof(Languages), sap_language))
+                        request.AddHeader("Accept-Language", item.Name);
                 p = new Parameter
                 {
                     Name = Sap_language,
-                    Value = Enum.GetName(typeof(Languages), sap_language)
+                    Value = Enum.GetName(typeof(Languages), sap_language),
+                    Type = ParameterType.GetOrPost
                 };
                 list.Add(p);
             }

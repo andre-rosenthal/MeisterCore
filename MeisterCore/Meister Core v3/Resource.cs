@@ -34,7 +34,7 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.EN ) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.CultureBased ) : base()
         {
             resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client,language);
         }
@@ -47,7 +47,7 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="runtimeOptions"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.EN ) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased ) : base()
         {
             resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client, extensions, options, authentication, runtimeOptions, language);
         }
@@ -102,7 +102,7 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.EN ): base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.CultureBased ): base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();
@@ -120,7 +120,7 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.EN ) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased) : base()
         {
             Meister = Meister.Instance;
             Parm = new Parameters();

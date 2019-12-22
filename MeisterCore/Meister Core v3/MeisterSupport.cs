@@ -170,6 +170,7 @@ namespace MeisterCore.Support
         /// </summary>
         public enum Languages
         {
+            CultureBased,
             AR,
             BG,
             CS,
