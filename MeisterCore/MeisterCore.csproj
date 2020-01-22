@@ -15,14 +15,15 @@ Meister V2.x Core Nuger Package</Description>
     <AssemblyOriginatorKeyFile>MeisterCoreV2.pfx</AssemblyOriginatorKeyFile>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.19.12.14</Version>
-    <PackageReleaseNotes>Version 3.19.12.14
+    <Version>3.20.01.22</Version>
+    <PackageReleaseNotes>Version 3.20.01.22
 Based on .Net 4.8</PackageReleaseNotes>
-    <AssemblyVersion>3.19.12.14</AssemblyVersion>
-    <FileVersion>3.19.12.14</FileVersion>
+    <AssemblyVersion>3.20.01.22</AssemblyVersion>
+    <FileVersion>3.20.01.22</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageIcon>meister.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -37,6 +38,14 @@ Based on .Net 4.8</PackageReleaseNotes>
     <Compile Remove="CoreCode v2 %28legacy%29\**" />
     <EmbeddedResource Remove="CoreCode v2 %28legacy%29\**" />
     <None Remove="CoreCode v2 %28legacy%29\**" />
+    <None Include="..\..\..\..\Downloads\meister.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Licenses\License.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -76,5 +85,10 @@ Based on .Net 4.8</PackageReleaseNotes>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Net.Http.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+  <PropertyGroup>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="licenses\License.txt" Pack="true" PackagePath="License.txt" />
+  </ItemGroup>
 </Project>

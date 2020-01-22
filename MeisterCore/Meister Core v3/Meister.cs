@@ -42,7 +42,7 @@ namespace MeisterCore
         private string accessToken;
         private string tokenType;
         private string sap_client;
-
+        private MeisterStatus meisterStatus { get; set; }
         public Languages sap_language { get; private set; }
 
         private bool SapClientOK;
@@ -82,7 +82,7 @@ namespace MeisterCore
         /// <param name="authentications"></param>
         /// <param name="credentials"></param>
         /// <returns></returns>
-        internal bool Authenticate<REQ, RES>(AuthenticationModes authentications, AuthenticationHeaderValue credentials)
+        internal MeisterStatus Authenticate<REQ, RES>(AuthenticationModes authentications, AuthenticationHeaderValue credentials)
         {
             switch (authentications)
             {
@@ -105,16 +105,17 @@ namespace MeisterCore
                                 DoResourceAllocation(request, metadata);
                                 request.AddHeader(csrf, "Fetch");
                                 IRestResponse response = Client.Execute(request);
+                                meisterStatus = new MeisterStatus(response, request.Resource);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return IsAutheticated;
+                                return meisterStatus;
                             }
                         }
                         else
                             throw new MeisterException("The authorization header is either empty or isn't Basic");
                     }
                     else
-                        return true;
+                        return meisterStatus;
                     break;
                 case AuthenticationModes.OAuth:
                     if (!IsAutheticated)
@@ -136,9 +137,10 @@ namespace MeisterCore
                                 request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
                                 request.AddHeader("Accept", "application/json");
                                 IRestResponse response = Client.Execute(request);
+                                meisterStatus = new MeisterStatus(response, request.Resource);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return IsAutheticated;
+                                return meisterStatus;
                             }
                         }
                     }
@@ -152,7 +154,7 @@ namespace MeisterCore
                 default:
                     break;
             }
-            return false;
+            return new MeisterStatus();
         }
         /// <summary>
         /// Meister execution path

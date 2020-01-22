@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <Version>3.19.12.14</Version>
+    <Version>3.20.01.22</Version>
     <Description>Meister Core for .Net Core 3.0
 Meister V2.x
 Meister V3</Description>
@@ -10,12 +10,15 @@ Meister V3</Description>
     <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 4.8</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>www.meisterapplications.com</PackageProjectUrl>
+    <PackageIcon>meister.png</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\MeisterCore\Meister Core v3\Meister.cs" Link="Linked Sources\Meister.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterException.cs" Link="Linked Sources\MeisterException.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterFailure.cs" Link="Linked Sources\MeisterFailure.cs" />
+    <Compile Include="..\MeisterCore\Meister Core v3\MeisterStatus.cs" Link="Linked Sources\MeisterStatus.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\MeisterSupport.cs" Link="Linked Sources\MeisterSupport.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Parameters.cs" Link="Linked Sources\Parameters.cs" />
     <Compile Include="..\MeisterCore\Meister Core v3\Resource.cs" Link="Linked Sources\Resource.cs" />
@@ -32,4 +35,16 @@ Meister V3</Description>
     <Folder Include="Linked Sources\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\meister.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\MeisterCore\Licenses\License.txt" Pack="true" PackagePath="License.txt" />
+  </ItemGroup>
 </Project>

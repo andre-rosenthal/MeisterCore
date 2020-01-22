@@ -369,7 +369,7 @@
     "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "3.19.12.14",
+    "version": "3.20.1.22",
     "restore": {
       "projectUniqueName": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
@@ -416,7 +416,7 @@
             "version": "[106.6.10, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -55,7 +55,7 @@ namespace MeisterCore
         /// Authenticator
         /// </summary>
         /// <returns></returns>
-        public bool Authenticate()
+        public MeisterStatus Authenticate()
         {
             return resource.Authenticate();
         }
@@ -140,7 +140,7 @@ namespace MeisterCore
         /// <summary>
         /// Authenticate the specified userid and password if using basic authentication
         /// </summary>
-        public bool Authenticate()
+        public MeisterStatus Authenticate()
         {
             if (Credentials != null)
                 return Meister.Authenticate<REQ,RES>(Authentications, Credentials);
