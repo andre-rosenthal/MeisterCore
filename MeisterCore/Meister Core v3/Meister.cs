@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using static MeisterCore.Support.MeisterSupport;
-
 namespace MeisterCore
 {
     /// <summary>
@@ -44,7 +43,6 @@ namespace MeisterCore
         private string sap_client;
         private MeisterStatus meisterStatus { get; set; }
         public Languages sap_language { get; private set; }
-
         private bool SapClientOK;
         private string CsrfToken { get; set; }
         private MeisterExtensions Extensions { get; set; }
@@ -263,7 +261,7 @@ namespace MeisterCore
                 {
                     var task = Task.Run(async () =>
                     {
-                        response = await Client.ExecuteTaskAsync<OD4Body<RES>>(request, cancel.Token);
+                        response = await Client.ExecuteAsync<OD4Body<RES>>(request, cancel.Token);
                         return response.Data;
                     });
                     task.Wait(cancel.Token);
@@ -380,7 +378,7 @@ namespace MeisterCore
                 {
                     var task = Task.Run(async () =>
                     {
-                        response = await Client.ExecuteTaskAsync<OD2Body<RES>>(request, cancel.Token);
+                        response = await Client.ExecuteAsync<OD2Body<RES>>(request, cancel.Token);
                         return response.Data;
                     });
                     task.Wait(cancel.Token);
@@ -437,7 +435,7 @@ namespace MeisterCore
             var taskCompletionSource = new TaskCompletionSource<T>();
             try
             {
-                IRestResponse<T> response = await Client.ExecuteTaskAsync<T>(request);
+                IRestResponse<T> response = await Client.ExecuteAsync<T>(request);
                 return response.Data;
             }
             catch (MeisterException)
@@ -631,31 +629,16 @@ namespace MeisterCore
         }
         private List<Parameter> AddSAPSuffixes(RestRequest request)
         {
-            Parameter p = null;
             List<Parameter> list = new List<Parameter>();
             if (SapClientOK)
-            {
-                p = new Parameter
-                {
-                    Name = Sap_client,
-                    Value = sap_client,
-                    Type = ParameterType.GetOrPost
-                };
-                list.Add(p);
-            }
+                list.Add(new Parameter(Sap_client, sap_client, ParameterType.GetOrPost));
             if (sap_language != Languages.CultureBased)
             {
                 var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
                 foreach (var item in cultures)
                     if (item.TwoLetterISOLanguageName.ToUpper() == Enum.GetName(typeof(Languages), sap_language))
                         request.AddHeader("Accept-Language", item.Name);
-                p = new Parameter
-                {
-                    Name = Sap_language,
-                    Value = Enum.GetName(typeof(Languages), sap_language),
-                    Type = ParameterType.GetOrPost
-                };
-                list.Add(p);
+                list.Add(new Parameter(Sap_language, Enum.GetName(typeof(Languages), sap_language), ParameterType.GetOrPost));
             }
             return list;
         }

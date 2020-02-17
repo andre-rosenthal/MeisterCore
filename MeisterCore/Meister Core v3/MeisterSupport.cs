@@ -5,12 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-
 namespace MeisterCore.Support
 {
     /// <summary>
@@ -117,9 +113,7 @@ namespace MeisterCore.Support
     public class SkipEmptyCollectionsContractResolver : DefaultContractResolver
     {
         public SkipEmptyCollectionsContractResolver(bool shareCache = false) : base() { }
-
-        protected override JsonProperty CreateProperty(MemberInfo member,
-                MemberSerialization memberSerialization)
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
             if (property.PropertyType == typeof(string))

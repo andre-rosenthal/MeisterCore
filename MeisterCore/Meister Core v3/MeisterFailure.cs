@@ -1,6 +1,4 @@
 using Newtonsoft.Json;
-
-
 namespace MeisterCore.Support
 {
     public partial class BackendFailure

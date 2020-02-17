@@ -144,7 +144,7 @@
           "lib/net45/NuGet.Versioning.dll": {}
         }
       },
-      "RestSharp/106.6.10": {
+      "RestSharp/106.10.1": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Web"
@@ -342,10 +342,10 @@
         "nuget.versioning.nuspec"
       ]
     },
-    "RestSharp/106.6.10": {
-      "sha512": "x1FM32hjnVOIn+DKtCs2Y4Q2DCUE5KW08NUXUd4GjgKjE+5PE0F6e9XfUg7nILo05M0TA/HRkRD/SeQ8+duOUA==",
+    "RestSharp/106.10.1": {
+      "sha512": "MhR4w8LbArVaRA5T/oAR3ZnF852QXtDXRBO84GsvyYzsm7FsjXHJ+JaM8x/nR/B/OCB1WbolGH7hqMT1GZpNJw==",
       "type": "package",
-      "path": "restsharp/106.6.10",
+      "path": "restsharp/106.10.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -353,7 +353,7 @@
         "lib/net452/RestSharp.xml",
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.106.6.10.nupkg.sha512",
+        "restsharp.106.10.1.nupkg.sha512",
         "restsharp.nuspec"
       ]
     }
@@ -362,14 +362,14 @@
     ".NETFramework,Version=v4.8": [
       "Newtonsoft.Json >= 12.0.3",
       "NuGet.Client >= 4.2.0",
-      "RestSharp >= 106.6.10"
+      "RestSharp >= 106.10.1"
     ]
   },
   "packageFolders": {
     "C:\\Users\\MeisterAdmin\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "3.20.1.22",
+    "version": "3.20.2.17",
     "restore": {
       "projectUniqueName": "C:\\Users\\MeisterAdmin\\Source\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
@@ -413,7 +413,7 @@
           },
           "RestSharp": {
             "target": "Package",
-            "version": "[106.6.10, )"
+            "version": "[106.10.1, )"
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"

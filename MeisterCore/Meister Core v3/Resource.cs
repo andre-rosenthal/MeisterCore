@@ -1,19 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Web;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
+﻿using System;
 using System.Net.Http.Headers;
-using RestSharp.Authenticators;
-using System.Text;
-using RestSharp;
-using System.Threading.Tasks;
 using static MeisterCore.Support.MeisterSupport;
 using MeisterCore.Support;
-
 namespace MeisterCore
 {
     /// <summary>

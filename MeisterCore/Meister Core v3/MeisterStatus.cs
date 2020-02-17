@@ -1,9 +1,7 @@
 using Newtonsoft.Json;
 using RestSharp;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Xml;
-
 namespace MeisterCore.Support
 {
     public partial class MeisterStatus
@@ -18,16 +16,26 @@ namespace MeisterCore.Support
         }
         public MeisterStatus(IRestResponse response, string endpoint)
         {
-            StatusCode = response.StatusCode;
-            StatusCodeDescription = response.StatusDescription;
-            LogEntry = response.Content;
-            OriginalUrl = response.ResponseUri.AbsoluteUri;
-            FromEndpoint = endpoint;
-            if (LogEntry.Contains("<?xml"))
+            if (response.ResponseUri != null)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(LogEntry);
-                LogEntry = JsonConvert.SerializeXmlNode(doc);
+                StatusCode = response.StatusCode;
+                StatusCodeDescription = response.StatusDescription;
+                LogEntry = response.Content;
+                OriginalUrl = response.ResponseUri.AbsoluteUri;
+                FromEndpoint = endpoint;
+                if (LogEntry.Contains("<?xml"))
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(LogEntry);
+                    LogEntry = JsonConvert.SerializeXmlNode(doc);
+                }
+            }
+            else
+            {
+                StatusCode = HttpStatusCode.ServiceUnavailable;
+                StatusCodeDescription = HttpStatusCode.GetName(typeof(HttpStatusCode), StatusCode);
+                FromEndpoint = endpoint;
+                OriginalUrl = response.Request.Resource;
             }
         }
         [JsonProperty("statusCode")]
