@@ -78,6 +78,7 @@ namespace MeisterCore
         private AuthenticationModes Authentications { get; set; }
         private Languages SapLanguage { get; set; }
         private string SAPClientNo { get; set; }
+        public MeisterStatus MeisterStatus { get; set; }
         /// <summary>
         /// Base ctor ...
         /// </summary>
@@ -100,6 +101,7 @@ namespace MeisterCore
             SAPClientNo = sap_client;
             SapLanguage = language;
             Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
+            MeisterStatus = new MeisterStatus();
         }
         /// <summary>
         /// Full Constructor
@@ -124,6 +126,7 @@ namespace MeisterCore
                 Meister.Configure(uri, Protocols.ODataV4, sap_client,language);
             else
                 Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
+            MeisterStatus = new MeisterStatus();
         }
         /// <summary>
         /// Authenticate the specified userid and password if using basic authentication
@@ -131,7 +134,10 @@ namespace MeisterCore
         public MeisterStatus Authenticate()
         {
             if (Credentials != null)
-                return Meister.Authenticate<REQ,RES>(Authentications, Credentials);
+            {
+                MeisterStatus = Meister.Authenticate<REQ, RES>(Authentications, Credentials);
+                return MeisterStatus;
+            }
             else
                 throw new MeisterException("AuthenticationHeaderValue is not set");
         }
@@ -156,15 +162,21 @@ namespace MeisterCore
                 try
                 {
                     ConstructParm(callback);
-                    return Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
+                    dynamic response = Meister.Execute<REQ, RES>(endpoint, req, Parm, RuntimeOption, Options);
+                    MeisterStatus = Meister.MeisterStatus;
+                    return response;
                 }
-                catch (MeisterException)
+                catch (MeisterException mex)
                 {
+                    MeisterStatus.StatusCode = mex.httpStatusCode;
+                    MeisterStatus.LogEntry = mex.Message;
                     throw;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return null;
+                    MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+                    MeisterStatus.LogEntry = ex.Message;
+                    throw;
                 }
             }
             else
@@ -210,7 +222,6 @@ namespace MeisterCore
                                 Parm.Compression = Parameters.Outbound;
                             break;
                     }
- 
         }
     }
 }

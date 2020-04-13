@@ -15,15 +15,14 @@ Meister V2.x Core Nuger Package</Description>
     <AssemblyOriginatorKeyFile>MeisterCoreV2.pfx</AssemblyOriginatorKeyFile>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.20.02.17</Version>
-    <PackageReleaseNotes>Version 3.20.02.17
-Based on .Net 4.8</PackageReleaseNotes>
-    <AssemblyVersion>3.20.02.17</AssemblyVersion>
-    <FileVersion>3.20.02.17</FileVersion>
+    <Version>3.20.04.15</Version>
+    <PackageReleaseNotes>Based on .Net 4.8</PackageReleaseNotes>
+    <AssemblyVersion>3.20.04.15</AssemblyVersion>
+    <FileVersion>3.20.04.15</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon>meister.png</PackageIcon>
+    <PackageIcon>Meister.jpg</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet />
@@ -35,7 +34,7 @@ Based on .Net 4.8</PackageReleaseNotes>
     <Compile Remove="CoreCode v2 %28legacy%29\**" />
     <EmbeddedResource Remove="CoreCode v2 %28legacy%29\**" />
     <None Remove="CoreCode v2 %28legacy%29\**" />
-    <None Include="..\..\..\..\Downloads\meister.png">
+    <None Include="Licenses\Meister.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

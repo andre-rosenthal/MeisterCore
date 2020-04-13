@@ -41,7 +41,7 @@ namespace MeisterCore
         private string accessToken;
         private string tokenType;
         private string sap_client;
-        private MeisterStatus meisterStatus { get; set; }
+        public MeisterStatus MeisterStatus { get; set; }
         public Languages sap_language { get; private set; }
         private bool SapClientOK;
         private string CsrfToken { get; set; }
@@ -103,17 +103,17 @@ namespace MeisterCore
                                 DoResourceAllocation(request, metadata);
                                 request.AddHeader(csrf, "Fetch");
                                 IRestResponse response = Client.Execute(request);
-                                meisterStatus = new MeisterStatus(response, request.Resource);
+                                MeisterStatus = new MeisterStatus(response, request.Resource);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return meisterStatus;
+                                return MeisterStatus;
                             }
                         }
                         else
                             throw new MeisterException("The authorization header is either empty or isn't Basic");
                     }
                     else
-                        return meisterStatus;
+                        return MeisterStatus;
                     break;
                 case AuthenticationModes.OAuth:
                     if (!IsAutheticated)
@@ -135,10 +135,10 @@ namespace MeisterCore
                                 request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
                                 request.AddHeader("Accept", "application/json");
                                 IRestResponse response = Client.Execute(request);
-                                meisterStatus = new MeisterStatus(response, request.Resource);
+                                MeisterStatus = new MeisterStatus(response, request.Resource);
                                 if (HttpResponseInValidRange(response.StatusCode))
                                     IsAutheticated = true;
-                                return meisterStatus;
+                                return MeisterStatus;
                             }
                         }
                     }
@@ -262,6 +262,7 @@ namespace MeisterCore
                     var task = Task.Run(async () =>
                     {
                         response = await Client.ExecuteAsync<OD4Body<RES>>(request, cancel.Token);
+                        BuildStatusData<RES, OD4Body<RES>>(response);
                         return response.Data;
                     });
                     task.Wait(cancel.Token);
@@ -330,21 +331,31 @@ namespace MeisterCore
                                     throw new MeisterException(failure.BackendMessage, HttpStatusCode.InternalServerError);
                             }
                         }
-                        catch (MeisterException)
+                        catch (MeisterException mex)
                         {
+                            MeisterStatus.StatusCode = mex.httpStatusCode;
+                            MeisterStatus.LogEntry = mex.Message;
                             throw;
                         }
-                        catch (Exception)
-                        { }
+                        catch (Exception ex)
+                        {
+                            MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+                            MeisterStatus.LogEntry = ex.Message;
+                            throw;
+                        }
                     }
                     return VanillaProcess<RES>(json);
                 }
-                catch (MeisterException)
+                catch (MeisterException mex)
                 {
+                    MeisterStatus.StatusCode = mex.httpStatusCode;
+                    MeisterStatus.LogEntry = mex.Message;
                     throw;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+                    MeisterStatus.LogEntry = ex.Message;
                     throw new MeisterException("Unable to marshall object d[0] from OD2Body");
                 }
             }
@@ -379,6 +390,7 @@ namespace MeisterCore
                     var task = Task.Run(async () =>
                     {
                         response = await Client.ExecuteAsync<OD2Body<RES>>(request, cancel.Token);
+                        BuildStatusData<RES,OD2Body<RES>>(response);
                         return response.Data;
                     });
                     task.Wait(cancel.Token);
@@ -392,6 +404,27 @@ namespace MeisterCore
                 if (cancel != null)
                     cancel.Dispose();
             }
+        }
+        /// <summary>
+        /// Builds the Status object after the call is completed
+        /// </summary>
+        /// <typeparam name="RES"></typeparam>
+        /// <param name="response"></param>
+        private void BuildStatusData<RES,IR>(IRestResponse<IR> response)
+        {
+            MeisterStatus.StatusCode = response.StatusCode;
+            MeisterStatus.StatusCodeDescription = response.StatusDescription;
+            MeisterStatus.OriginalUrl = Client.BaseUrl.AbsoluteUri;
+        }
+        /// <summary>
+        /// Builds the Status object after the call is completed
+        /// </summary>
+        /// <param name="response"></param>
+        private void BuildStatusData(IRestResponse response)
+        {
+            MeisterStatus.StatusCode = response.StatusCode;
+            MeisterStatus.StatusCodeDescription = response.StatusDescription;
+            MeisterStatus.OriginalUrl = Client.BaseUrl.AbsoluteUri;
         }
         /// <summary>
         /// Set extensions at Meister runtime
@@ -436,10 +469,19 @@ namespace MeisterCore
             try
             {
                 IRestResponse<T> response = await Client.ExecuteAsync<T>(request);
+                BuildStatusData(response);
                 return response.Data;
             }
-            catch (MeisterException)
+            catch (MeisterException mex)
             {
+                MeisterStatus.StatusCode = mex.httpStatusCode;
+                MeisterStatus.LogEntry = mex.Message;
+                throw;
+            }
+            catch (Exception ex)
+            {
+                MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+                MeisterStatus.LogEntry = ex.Message;
                 throw;
             }
         }
@@ -452,6 +494,7 @@ namespace MeisterCore
         private Task<T> ExecuteSync<T>(RestRequest request)
         {
             var response = Client.Execute(request);
+            BuildStatusData(response);
             try
             {
                 var res = JsonConvert.DeserializeObject<T>(response.Content);
@@ -459,7 +502,9 @@ namespace MeisterCore
             }
             catch (MeisterException mex)
             {
-                throw mex;
+                MeisterStatus.StatusCode = mex.httpStatusCode;
+                MeisterStatus.LogEntry = mex.Message;
+                throw;
             }
             catch (Exception ex)
             {
@@ -642,6 +687,5 @@ namespace MeisterCore
             }
             return list;
         }
-
     }
 }
