@@ -33,7 +33,7 @@ Meister V2.x Core Nuger Package</Description>
     <Compile Remove="CoreCode v2 %28legacy%29\**" />
     <EmbeddedResource Remove="CoreCode v2 %28legacy%29\**" />
     <None Remove="CoreCode v2 %28legacy%29\**" />
-    <Content Include="bin\Release\package.json" />
+    <Content Include="package.json" />
     <None Include="Licenses\Meister.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -75,6 +75,7 @@ Meister V2.x Core Nuger Package</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Release\" />
     <Folder Include="JScript\" />
     <Folder Include="Resources\" />
   </ItemGroup>

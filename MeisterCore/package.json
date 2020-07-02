@@ -1,0 +1,16 @@
+{
+  "name": "MeisterCore",
+  "version": "3.20.60.24",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gateway-architects.visualstudio.com/Meister%20Core/_git/"
+  },
+  "keywords": [],
+  "author": "Gateway Architects",
+  "license": "ISC",
+  "description": "Meister Core"
+}
