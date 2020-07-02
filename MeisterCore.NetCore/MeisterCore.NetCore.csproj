@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>3.20.04.15</Version>
+    <Version>3.20.06.24</Version>
     <Description>Meister Core for .Net Core 3.1
 Meister V2.x
 Meister V3</Description>
@@ -28,7 +28,7 @@ Meister V3</Description>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,10 +43,10 @@ Meister V3</Description>
   </ItemGroup>
   <PropertyGroup>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <AssemblyVersion>3.20.04.15</AssemblyVersion>
-    <FileVersion>3.20.04.15</FileVersion>
+    <AssemblyVersion>3.20.06.24</AssemblyVersion>
+    <FileVersion>3.20.06.24</FileVersion>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>MeisterCore.NetCore.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>MeisterV2Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\MeisterCore\Licenses\License.txt" Pack="true" PackagePath="License.txt" />

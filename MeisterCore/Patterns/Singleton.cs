@@ -14,7 +14,7 @@ namespace MeisterCore
             if (!Array.Exists(ctors, (ci) => ci.GetParameters().Length == 0))
                 throw new InvalidOperationException("Non-public ctor() was not found.");
             var ctor = Array.Find(ctors, (ci) => ci.GetParameters().Length == 0);
-            return ctor.Invoke(new object[] { }) as T;
+            return ctor.Invoke(Array.Empty<object>()) as T;
         }, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
         /// <summary>

@@ -6,11 +6,11 @@ namespace MeisterCore
 {
     public static class UrlSuffixes
     {
-        public static string AddUrlParams(this string url, Dictionary<string, string> parameters)
+        public static string AddUrlParams(this string urlString, Dictionary<string, string> parameters)
         {
             if (parameters == null || !parameters.Keys.Any())
-                return url;
-            var tempUrl = new StringBuilder($"{url}?");
+                return urlString;
+            var tempUrl = new StringBuilder($"{urlString}?");
             int count = 0;
             foreach (KeyValuePair<string, string> parameter in parameters)
             {

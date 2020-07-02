@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CA1054: Uri parameters should not be strings
+dotnet_diagnostic.CA1054.severity = none

@@ -2,6 +2,9 @@
 using System.Net.Http.Headers;
 using static MeisterCore.Support.MeisterSupport;
 using MeisterCore.Support;
+using System.Resources;
+using System.Globalization;
+
 namespace MeisterCore
 {
     /// <summary>
@@ -22,9 +25,9 @@ namespace MeisterCore
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.CultureBased ) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sapClient = null, Languages language = Languages.CultureBased ) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client,language);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sapClient,language);
         }
         /// <summary>
         /// Full ctor
@@ -35,9 +38,9 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="runtimeOptions"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased ) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sapClient = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased ) : base()
         {
-            resource = new Resource<dynamic, dynamic>(uri, cretendials,sap_client, extensions, options, authentication, runtimeOptions, language);
+            resource = new Resource<dynamic, dynamic>(uri, cretendials,sapClient, extensions, options, authentication, runtimeOptions, language);
         }
         /// <summary>
         /// Authenticator
@@ -78,6 +81,7 @@ namespace MeisterCore
         private AuthenticationModes Authentications { get; set; }
         private Languages SapLanguage { get; set; }
         private string SAPClientNo { get; set; }
+        private ResourceManager resourceManager { get; set; }
         public MeisterStatus MeisterStatus { get; set; }
         /// <summary>
         /// Base ctor ...
@@ -85,22 +89,25 @@ namespace MeisterCore
         ///
         internal Resource()
         {
+            resourceManager = new ResourceManager("RootResource", typeof(Resource).Assembly);
         }
         /// <summary>
         /// Simple ctor - defaults to OData v2, async run mode, and basic authentication
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, Languages language = Languages.CultureBased ): base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sapClient = null, Languages language = Languages.CultureBased ): base()
         {
+            if (uri == null)
+                throw new MeisterException(resourceManager.GetString("GatewayNotSet",CultureInfo.InvariantCulture));
             Meister = Meister.Instance;
             Parm = new Parameters();
             Authentications = AuthenticationModes.Basic;
             Credentials = cretendials;
             RuntimeOption = RuntimeOptions.ExecuteAsync;
-            SAPClientNo = sap_client;
+            SAPClientNo = sapClient;
             SapLanguage = language;
-            Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
+            Meister.Configure(uri, Protocols.ODataV2, sapClient,language);
             MeisterStatus = new MeisterStatus();
         }
         /// <summary>
@@ -110,8 +117,10 @@ namespace MeisterCore
         /// <param name="options"></param>
         /// <param name="authentication"></param>
         /// <param name="cretendials"></param>
-        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sap_client = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased) : base()
+        public Resource(Uri uri, AuthenticationHeaderValue cretendials, string sapClient = null, MeisterExtensions extensions = MeisterExtensions.RemoveNullsAndEmptyArrays, MeisterOptions options = MeisterOptions.None, AuthenticationModes authentication = AuthenticationModes.Basic, RuntimeOptions runtimeOptions = RuntimeOptions.ExecuteAsync, Languages language = Languages.CultureBased) : base()
         {
+            if (uri == null)
+                throw new MeisterException(resourceManager.GetString("GatewayNotSet", CultureInfo.InvariantCulture));
             Meister = Meister.Instance;
             Parm = new Parameters();
             Authentications = authentication;
@@ -120,12 +129,12 @@ namespace MeisterCore
             Extensions = extensions;
             Meister.SetExtensions(Extensions);
             Options = options;
-            SAPClientNo = sap_client;
+            SAPClientNo = sapClient;
             SapLanguage = language;
             if (options.HasFlag(MeisterOptions.UseODataV4))
-                Meister.Configure(uri, Protocols.ODataV4, sap_client,language);
+                Meister.Configure(uri, Protocols.ODataV4, sapClient,language);
             else
-                Meister.Configure(uri, Protocols.ODataV2, sap_client,language);
+                Meister.Configure(uri, Protocols.ODataV2, sapClient,language);
             MeisterStatus = new MeisterStatus();
         }
         /// <summary>
@@ -139,7 +148,7 @@ namespace MeisterCore
                 return MeisterStatus;
             }
             else
-                throw new MeisterException("AuthenticationHeaderValue is not set");
+                throw new MeisterException(resourceManager.GetString("MissingAuthenticationHeader", CultureInfo.InvariantCulture));
         }
         /// <summary>
         /// gets the raw json
@@ -157,6 +166,8 @@ namespace MeisterCore
         /// <returns></returns>
         public dynamic Execute(string endpoint, REQ req, Uri callback = null)
         {
+            if (req == null)
+                throw new MeisterException(resourceManager.GetString("RequestObjectNull", CultureInfo.InvariantCulture));
             if (Meister.IsAutheticated)
             {
                 try
@@ -180,7 +191,7 @@ namespace MeisterCore
                 }
             }
             else
-                throw new MeisterException("First call the Authentication process, then call Execute.");            
+                throw new MeisterException(resourceManager.GetString("ExecuteAfterAuthenticate", CultureInfo.InvariantCulture));
         }
         /// <summary>
         /// Set the parameters for Meister runtime
@@ -193,18 +204,18 @@ namespace MeisterCore
                     switch (value)
                     {
                         case MeisterOptions.TestRun:
-                            Parm.Testrun = Abap_true;
+                            Parm.Testrun = AbapTrue;
                             break;
                         case MeisterOptions.AsyncMode:
-                            if (Parm.Queued != Abap_true)
-                                Parm.Async = Abap_true;
+                            if (Parm.Queued != AbapTrue)
+                                Parm.Async = AbapTrue;
                             break;
                         case MeisterOptions.QuequeMode:
-                            if (Parm.Async != Abap_true)
-                                Parm.Queued = Abap_true;
+                            if (Parm.Async != AbapTrue)
+                                Parm.Queued = AbapTrue;
                             break;
                         case MeisterOptions.UseCallback:
-                            if (Parm.Async == Abap_true && callback != null)
+                            if (Parm.Async == AbapTrue && callback != null)
                                 Parm.Callback = callback.AbsolutePath;
                             break;
                         case MeisterOptions.None:

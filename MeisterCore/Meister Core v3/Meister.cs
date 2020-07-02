@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Resources;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,18 +49,20 @@ namespace MeisterCore
         private MeisterExtensions Extensions { get; set; }
         private BackendFailure Failure {get;set;}
         private static readonly RestClient Client = new RestClient();
+        private ResourceManager resourceManager { get; set; }
         public string RawJsonResponse { get; set; }
         /// <summary>
         /// Ctor 
         /// </summary>
-        private Meister()
+        internal Meister()
         {
+            resourceManager = new ResourceManager("RootResource", typeof(Resource).Assembly);
         }
         /// <summary>
         /// Configuration step ..
         /// </summary>
         /// <param name="uri"></param>
-        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null, Languages sap_language = Languages.CultureBased)
+        public void Configure(Uri uri, Protocols prot = Protocols.ODataV2, string sap_client = null, Languages sap_language = Languages.CultureBased) 
         {
             ODataProtocol = prot;
             this.sap_client = sap_client;
@@ -110,7 +113,7 @@ namespace MeisterCore
                             }
                         }
                         else
-                            throw new MeisterException("The authorization header is either empty or isn't Basic");
+                            throw new MeisterException(resourceManager.GetString("BadAuthetication", CultureInfo.InvariantCulture));
                     }
                     else
                         return MeisterStatus;
@@ -143,7 +146,7 @@ namespace MeisterCore
                         }
                     }
                     else
-                        throw new MeisterException("The authorization header is either empty or isn't OAuth2");
+                        throw new MeisterException(resourceManager.GetString("InvalidOauth", CultureInfo.InvariantCulture));
                     break;
                 case AuthenticationModes.JWT:
                     break;
@@ -204,7 +207,7 @@ namespace MeisterCore
                 }
                 catch (MeisterException)
                 {
-                    throw new MeisterException("Unable to marshall object. OD4Body(value) = " + od4.value);
+                    throw new MeisterException(resourceManager.GetString("UnableToMarshall", CultureInfo.InvariantCulture) + od4.value);                    
                 }
         }
         /// <summary>
@@ -236,7 +239,7 @@ namespace MeisterCore
                         request = null;
                     }
                     else
-                        throw new MeisterException("Failed to obtain a Csrf-Token from Meister");
+                        throw new MeisterException(resourceManager.GetString("FailedCsrfToken", CultureInfo.InvariantCulture));
                 }
                 IRestResponse<OD4Body<RES>> response = null;
                 request = new RestRequest(Method.POST);
@@ -261,7 +264,7 @@ namespace MeisterCore
                 {
                     var task = Task.Run(async () =>
                     {
-                        response = await Client.ExecuteAsync<OD4Body<RES>>(request, cancel.Token);
+                        response = await Client.ExecuteAsync<OD4Body<RES>>(request, cancel.Token).ConfigureAwait(true);
                         BuildStatusData<RES, OD4Body<RES>>(response);
                         return response.Data;
                     });
@@ -294,7 +297,7 @@ namespace MeisterCore
             if (od2 == null)
                 return null;
             else if (od2.d == null && runtimeOption == RuntimeOptions.ExecuteSync)
-                throw new MeisterException("Failure to acquire OData 2 return set");
+                throw new MeisterException(resourceManager.GetString("OData2Failure", CultureInfo.InvariantCulture));
             else
             {
                 try
@@ -356,7 +359,7 @@ namespace MeisterCore
                 {
                     MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
                     MeisterStatus.LogEntry = ex.Message;
-                    throw new MeisterException("Unable to marshall object d[0] from OD2Body");
+                    throw new MeisterException(resourceManager.GetString("UnableToMashallOD2", CultureInfo.InvariantCulture));
                 }
             }
         }
@@ -389,7 +392,7 @@ namespace MeisterCore
                 {
                     var task = Task.Run(async () =>
                     {
-                        response = await Client.ExecuteAsync<OD2Body<RES>>(request, cancel.Token);
+                        response = await Client.ExecuteAsync<OD2Body<RES>>(request, cancel.Token).ConfigureAwait(true);
                         BuildStatusData<RES,OD2Body<RES>>(response);
                         return response.Data;
                     });
@@ -468,7 +471,7 @@ namespace MeisterCore
             var taskCompletionSource = new TaskCompletionSource<T>();
             try
             {
-                IRestResponse<T> response = await Client.ExecuteAsync<T>(request);
+                IRestResponse<T> response = await Client.ExecuteAsync<T>(request).ConfigureAwait(true);
                 BuildStatusData(response);
                 return response.Data;
             }
@@ -515,7 +518,7 @@ namespace MeisterCore
                 }
                 catch (Exception exe)
                 {
-                    throw new MeisterException("Nuget exception", HttpStatusCode.InternalServerError, exe);
+                    throw new MeisterException(resourceManager.GetString("MeisterOwn", CultureInfo.InvariantCulture), HttpStatusCode.InternalServerError, exe);
                 }
             }
         }
@@ -528,12 +531,14 @@ namespace MeisterCore
         {
             return (statusCode >= HttpStatusCode.OK && statusCode < HttpStatusCode.BadRequest);
         }
+
         /// <summary>
         /// Vanilla Processor
         /// </summary>
         /// <typeparam name="RES"></typeparam>
         /// <param name="json"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         private dynamic VanillaProcess<RES>(string json)
         {
             RawJsonResponse = json;
@@ -636,9 +641,9 @@ namespace MeisterCore
                 string v = Quote + val + Quote + ":";
                 string[] sa = { v };
                 sa = json.Split(sa, System.StringSplitOptions.RemoveEmptyEntries);
-                if (sa.Count() == 2)
+                if (sa.Length == 2)
                     return sa[1].Substring(1, sa[1].Length - 1);
-                else if (sa.Count() == 1)
+                else if (sa.Length == 1)
                     return sa[0].Substring(1, sa[0].Length - 1);
                 else
                     return json;
@@ -681,7 +686,7 @@ namespace MeisterCore
             {
                 var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
                 foreach (var item in cultures)
-                    if (item.TwoLetterISOLanguageName.ToUpper() == Enum.GetName(typeof(Languages), sap_language))
+                    if (item.TwoLetterISOLanguageName.ToUpper(CultureInfo.CurrentCulture) == Enum.GetName(typeof(Languages), sap_language))
                         request.AddHeader("Accept-Language", item.Name);
                 list.Add(new Parameter(Sap_language, Enum.GetName(typeof(Languages), sap_language), ParameterType.GetOrPost));
             }

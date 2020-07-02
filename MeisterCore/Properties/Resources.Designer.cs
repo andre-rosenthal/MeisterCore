@@ -19,7 +19,7 @@ namespace MeisterCore.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,96 @@ namespace MeisterCore.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The authorization header is either empty or isn&apos;t Basic.
+        /// </summary>
+        internal static string BadAuthentication {
+            get {
+                return ResourceManager.GetString("BadAuthentication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First call the Authentication process, then call Execute..
+        /// </summary>
+        internal static string ExecuteAfterAuthenticate {
+            get {
+                return ResourceManager.GetString("ExecuteAfterAuthenticate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to obtain a Csrf-Token from Meister.
+        /// </summary>
+        internal static string FailedCsrfToken {
+            get {
+                return ResourceManager.GetString("FailedCsrfToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL for SAP Gateway is null.
+        /// </summary>
+        internal static string GatewayNotSet {
+            get {
+                return ResourceManager.GetString("GatewayNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The authorization header is either empty or isn&apos;t OAuth2.
+        /// </summary>
+        internal static string InvalidOauth {
+            get {
+                return ResourceManager.GetString("InvalidOauth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AuthenticationHeaderValue is not set.
+        /// </summary>
+        internal static string MissingAuthenticationHeader {
+            get {
+                return ResourceManager.GetString("MissingAuthenticationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure to acquire OData 2 return set.
+        /// </summary>
+        internal static string OData2Failure {
+            get {
+                return ResourceManager.GetString("OData2Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request object is null.
+        /// </summary>
+        internal static string RequestObjectNull {
+            get {
+                return ResourceManager.GetString("RequestObjectNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to marshall object. OD4Body(value) =.
+        /// </summary>
+        internal static string UnableToMarshall {
+            get {
+                return ResourceManager.GetString("UnableToMarshall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to marshall object d[0] from OD2Body.
+        /// </summary>
+        internal static string UnableToMashallOD2 {
+            get {
+                return ResourceManager.GetString("UnableToMashallOD2", resourceCulture);
             }
         }
     }

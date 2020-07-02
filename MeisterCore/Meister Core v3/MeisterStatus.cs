@@ -16,7 +16,7 @@ namespace MeisterCore.Support
         }
         public MeisterStatus(IRestResponse response, string endpoint)
         {
-            if (response.ResponseUri != null)
+            if (response != null && response.ResponseUri != null)
             {
                 StatusCode = response.StatusCode;
                 StatusCodeDescription = response.StatusDescription;
@@ -30,7 +30,7 @@ namespace MeisterCore.Support
                     LogEntry = JsonConvert.SerializeXmlNode(doc);
                 }
             }
-            else
+            else if (response != null)
             {
                 StatusCode = HttpStatusCode.ServiceUnavailable;
                 StatusCodeDescription = HttpStatusCode.GetName(typeof(HttpStatusCode), StatusCode);

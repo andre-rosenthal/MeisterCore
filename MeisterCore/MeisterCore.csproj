@@ -12,13 +12,12 @@ Meister V2.x Core Nuger Package</Description>
     <Copyright>Gateway Architects</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>MeisterCoreV2.pfx</AssemblyOriginatorKeyFile>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.20.04.15</Version>
+    <Version>3.20.06.24</Version>
     <PackageReleaseNotes>Based on .Net 4.8</PackageReleaseNotes>
-    <AssemblyVersion>3.20.04.15</AssemblyVersion>
-    <FileVersion>3.20.04.15</FileVersion>
+    <AssemblyVersion>3.20.06.24</AssemblyVersion>
+    <FileVersion>3.20.06.24</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>
@@ -34,6 +33,7 @@ Meister V2.x Core Nuger Package</Description>
     <Compile Remove="CoreCode v2 %28legacy%29\**" />
     <EmbeddedResource Remove="CoreCode v2 %28legacy%29\**" />
     <None Remove="CoreCode v2 %28legacy%29\**" />
+    <Content Include="bin\Release\package.json" />
     <None Include="Licenses\Meister.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -44,9 +44,13 @@ Meister V2.x Core Nuger Package</Description>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NuGet.Client" Version="4.2.0" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,6 +86,8 @@ Meister V2.x Core Nuger Package</Description>
   </ItemGroup>
   <PropertyGroup>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>MeisterV2Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="licenses\License.txt" Pack="true" PackagePath="License.txt" />

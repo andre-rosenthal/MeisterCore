@@ -117,4 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BadAuthentication" xml:space="preserve">
+    <value>The authorization header is either empty or isn't Basic</value>
+  </data>
+  <data name="ExecuteAfterAuthenticate" xml:space="preserve">
+    <value>First call the Authentication process, then call Execute.</value>
+  </data>
+  <data name="FailedCsrfToken" xml:space="preserve">
+    <value>Failed to obtain a Csrf-Token from Meister</value>
+  </data>
+  <data name="GatewayNotSet" xml:space="preserve">
+    <value>URL for SAP Gateway is null</value>
+  </data>
+  <data name="InvalidOauth" xml:space="preserve">
+    <value>The authorization header is either empty or isn't OAuth2</value>
+  </data>
+  <data name="MissingAuthenticationHeader" xml:space="preserve">
+    <value>AuthenticationHeaderValue is not set</value>
+  </data>
+  <data name="OData2Failure" xml:space="preserve">
+    <value>Failure to acquire OData 2 return set</value>
+  </data>
+  <data name="RequestObjectNull" xml:space="preserve">
+    <value>Request object is null</value>
+  </data>
+  <data name="UnableToMarshall" xml:space="preserve">
+    <value>Unable to marshall object. OD4Body(value) =</value>
+  </data>
+  <data name="UnableToMashallOD2" xml:space="preserve">
+    <value>Unable to marshall object d[0] from OD2Body</value>
+  </data>
 </root>

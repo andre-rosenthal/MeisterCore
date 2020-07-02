@@ -130,7 +130,7 @@ namespace MeisterCore.Support
                     return Convert.ToDateTime(instance.GetType().GetProperty(member.Name).GetValue(instance, null)) != default(DateTime);
                 };
             }
-            else if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+            else if (member != null && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
             {
                 switch (member.MemberType)
                 {
@@ -156,7 +156,7 @@ namespace MeisterCore.Support
     /// <summary>
     /// Generic support
     /// </summary>
-    public class MeisterSupport
+    public static class MeisterSupport
     {
         [Flags]
         /// <summary>
@@ -255,14 +255,10 @@ namespace MeisterCore.Support
             ExecuteAsync = 1,
             ExecuteDelegate = 2,
         }
-        public const string Abap_true = "X";
+        public const string AbapTrue = "X";
         public const string val = "val";
-        private const string escaped = @"\""";
         private const char quote = '"';
         public static string Quote => quote.ToString();
-        private MeisterSupport()
-        {
-        }
         #region Support calls ...
         /// <summary>
         /// Append single quote
@@ -280,9 +276,14 @@ namespace MeisterCore.Support
         /// <returns></returns>
         public static string RemoveDrefAnnotations(string dref)
         {
-            string json = dref.Replace("%type", "type");
-            json = json.Replace("%val", "val");
-            return json;
+            if (!string.IsNullOrEmpty(dref))
+            {
+                string json = dref.Replace("%type", "type");
+                json = json.Replace("%val", "val");
+                return json;
+            }
+            else
+                return string.Empty;
         }
         /// <summary>
         /// Copies to.
@@ -291,10 +292,13 @@ namespace MeisterCore.Support
         /// <param name="dest">Destination.</param>
         public static void CopyTo(Stream src, Stream dest)
         {
-            byte[] bytes = new byte[4096];
-            int cnt;
-            while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0)
-                dest.Write(bytes, 0, cnt);
+            if (src != null && dest != null)
+            {
+                byte[] bytes = new byte[4096];
+                int cnt;
+                while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0)
+                    dest.Write(bytes, 0, cnt);
+            }
         }
         /// <summary>
         /// Bytes the array to string.
@@ -304,10 +308,9 @@ namespace MeisterCore.Support
         public static string ByteArrayToString(byte[] ba)
         {
             string s = string.Empty;
-            foreach (var b in ba)
-            {
-                s += b.ToString();
-            }
+            if (ba != null)
+                foreach (var b in ba)
+                    s += b.ToString();
             return s;
         }
         /// <summary>
@@ -317,13 +320,17 @@ namespace MeisterCore.Support
         /// <param name="st">St.</param>
         public static byte[] StringToByteArray(string st)
         {
-            string h = st.Replace(System.Environment.NewLine, String.Empty);
-            int NumberChars = h.Length / 2;
-            byte[] bytes = new byte[NumberChars];
-            using (var sr = new StringReader(h))
-                for (int i = 0; i < NumberChars; i++)
-                    bytes[i] = Convert.ToByte(new string(new char[2] { (char)sr.Read(), (char)sr.Read() }), 16);
-            return bytes;
+            if (!string.IsNullOrEmpty(st))
+            {
+                string h = st.Replace(System.Environment.NewLine, String.Empty);
+                int NumberChars = h.Length / 2;
+                byte[] bytes = new byte[NumberChars];
+                using (var sr = new StringReader(h))
+                    for (int i = 0; i < NumberChars; i++)
+                        bytes[i] = Convert.ToByte(new string(new char[2] { (char)sr.Read(), (char)sr.Read() }), 16);
+                return bytes;
+            }
+            return null;
         }
         /// <summary>
         /// Zip the specified str.
