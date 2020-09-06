@@ -5,7 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 namespace MeisterCore.Support
 {
@@ -269,6 +272,42 @@ namespace MeisterCore.Support
         {
             return "'" + json + "'";
         }
+        /// <summary>
+        /// To SecureString
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static SecureString ToSecureString(string s)
+        {
+            if (!string.IsNullOrEmpty(s))
+            {
+                SecureString sec = new SecureString();
+                s.ToCharArray().ToList().ForEach(sec.AppendChar);
+                sec.MakeReadOnly();
+                return sec;
+            }
+            else
+                return null;
+        }
+        /// <summary>
+        /// Convert from secure string ...
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ToUnSecureString(SecureString s)
+        {
+            IntPtr pointer = IntPtr.Zero;
+            try
+            {
+                pointer = Marshal.SecureStringToGlobalAllocUnicode(s);
+                return Marshal.PtrToStringUni(pointer);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(pointer);
+            }
+        }
+
         /// <summary>
         /// Remove dref from Meister's dref parser
         /// </summary>

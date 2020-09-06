@@ -14,10 +14,10 @@ Meister V2.x Core Nuger Package</Description>
     <SignAssembly>true</SignAssembly>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.20.09.06</Version>
+    <Version>3.20.09.07</Version>
     <PackageReleaseNotes>Based on .Net 4.8</PackageReleaseNotes>
-    <AssemblyVersion>3.20.09.06</AssemblyVersion>
-    <FileVersion>3.20.09.06</FileVersion>
+    <AssemblyVersion>3.20.09.07</AssemblyVersion>
+    <FileVersion>3.20.09.07</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>

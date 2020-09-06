@@ -801,7 +801,7 @@
     "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "3.20.9.6",
+    "version": "3.20.9.7",
     "restore": {
       "projectUniqueName": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
