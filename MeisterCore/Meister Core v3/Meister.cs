@@ -85,69 +85,15 @@ namespace MeisterCore
         /// <returns></returns>
         internal MeisterStatus Authenticate<REQ, RES>(AuthenticationModes authentications, AuthenticationHeaderValue credentials)
         {
+            string authHeader = credentials.Parameter;
+            if (authHeader == null)
+                throw new MeisterException(resourceManager.GetString("BadAuthetication", CultureInfo.InvariantCulture));
             switch (authentications)
             {
                 case AuthenticationModes.Basic:
-                    if (!IsAutheticated)
-                    {
-                        string authHeader = credentials.Parameter;
-                        if (authHeader != null)
-                        {
-                            string encodedUsernamePassword = authHeader.Trim();
-                            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-                            string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                            int separatorIndex = usernamePassword.IndexOf(':');
-                            username = usernamePassword.Substring(0, separatorIndex);
-                            password = usernamePassword.Substring(separatorIndex + 1);
-                            IAuthenticator authenticator = Client.Authenticator = new HttpBasicAuthenticator(username, password);
-                            if (authenticator != null)
-                            {
-                                var request = new RestRequest(Method.GET);
-                                DoResourceAllocation(request, metadata);
-                                request.AddHeader(csrf, "Fetch");
-                                IRestResponse response = Client.Execute(request);
-                                MeisterStatus = new MeisterStatus(response, request.Resource);
-                                if (HttpResponseInValidRange(response.StatusCode))
-                                    IsAutheticated = true;
-                                return MeisterStatus;
-                            }
-                        }
-                        else
-                            throw new MeisterException(resourceManager.GetString("BadAuthetication", CultureInfo.InvariantCulture));
-                    }
-                    else
-                        return MeisterStatus;
-                    break;
+                    return RunAsBasicAuthentication(authHeader);
                 case AuthenticationModes.OAuth:
-                    if (!IsAutheticated)
-                    {
-                        string authHeader = credentials.Parameter;
-                        if (authHeader != null)
-                        {
-                            string encodedUsernamePassword = authHeader.Substring("Token ".Length).Trim();
-                            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-                            string accesstokentype = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                            int seperatorIndex = accesstokentype.IndexOf(':');
-                            accessToken = accesstokentype.Substring(0, seperatorIndex);
-                            tokenType = accesstokentype.Substring(seperatorIndex + 1);
-                            IAuthenticator authenticator = Client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, tokenType);
-                            if (authenticator != null)
-                            {
-                                var request = new RestRequest(Method.GET);
-                                DoResourceAllocation(request, metadata);
-                                request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
-                                request.AddHeader("Accept", "application/json");
-                                IRestResponse response = Client.Execute(request);
-                                MeisterStatus = new MeisterStatus(response, request.Resource);
-                                if (HttpResponseInValidRange(response.StatusCode))
-                                    IsAutheticated = true;
-                                return MeisterStatus;
-                            }
-                        }
-                    }
-                    else
-                        throw new MeisterException(resourceManager.GetString("InvalidOauth", CultureInfo.InvariantCulture));
-                    break;
+                    return RunAsOAuth2Authentication(authHeader);
                 case AuthenticationModes.JWT:
                     break;
                 case AuthenticationModes.SAML2:
@@ -157,6 +103,65 @@ namespace MeisterCore
             }
             return new MeisterStatus();
         }
+
+        /// <summary>
+        /// OAuth 2.0
+        /// </summary>
+        /// <param name="authHeader"></param>
+        /// <returns></returns>
+        private MeisterStatus RunAsOAuth2Authentication(string authHeader)
+        {
+            string encodedUsernamePassword = authHeader.Substring("Token ".Length).Trim();
+            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+            string accesstokentype = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+            int seperatorIndex = accesstokentype.IndexOf(':');
+            accessToken = accesstokentype.Substring(0, seperatorIndex);
+            tokenType = accesstokentype.Substring(seperatorIndex + 1);
+            IAuthenticator authenticator = Client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(accessToken, tokenType);
+            if (authenticator != null)
+            {
+                var request = new RestRequest(Method.GET);
+                DoResourceAllocation(request, metadata);
+                request.AddHeader("Authorization", string.Format("bearer {0}", accessToken));
+                request.AddHeader("Accept", "application/json");
+                IRestResponse response = Client.Execute(request);
+                MeisterStatus = new MeisterStatus(response, request.Resource);
+                if (HttpResponseInValidRange(response.StatusCode))
+                    IsAutheticated = true;
+                return MeisterStatus;
+            }
+            else
+                throw new MeisterException(resourceManager.GetString("InvalidOauth", CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Basic Authenticator
+        /// </summary>
+        /// <param name="authHeader"></param>
+        private MeisterStatus RunAsBasicAuthentication(string authHeader)
+        {
+            string encodedUsernamePassword = authHeader.Trim();
+            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+            string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+            int separatorIndex = usernamePassword.IndexOf(':');
+            username = usernamePassword.Substring(0, separatorIndex);
+            password = usernamePassword.Substring(separatorIndex + 1);
+            IAuthenticator authenticator = Client.Authenticator = new HttpBasicAuthenticator(username, password);
+            if (authenticator != null)
+            {
+                var request = new RestRequest(Method.GET);
+                DoResourceAllocation(request, metadata);
+                request.AddHeader(csrf, "Fetch");
+                IRestResponse response = Client.Execute(request);
+                MeisterStatus = new MeisterStatus(response, request.Resource);
+                if (HttpResponseInValidRange(response.StatusCode))
+                    IsAutheticated = true;
+                return MeisterStatus;
+            }
+            else
+                throw new MeisterException(resourceManager.GetString("BadAuthetication", CultureInfo.InvariantCulture));
+        }
+
         /// <summary>
         /// Meister execution path
         /// </summary>

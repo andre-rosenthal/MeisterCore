@@ -2,30 +2,6 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.8": {
-      "Bridge/17.10.1": {
-        "type": "package",
-        "dependencies": {
-          "Bridge.Min": "17.10.1"
-        }
-      },
-      "Bridge.Core/17.10.1": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Bridge.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Bridge.dll": {}
-        }
-      },
-      "Bridge.Min/17.10.1": {
-        "type": "package",
-        "dependencies": {
-          "Bridge.Core": "17.10.1"
-        },
-        "build": {
-          "build/Bridge.Min.targets": {}
-        }
-      },
       "Microsoft.CodeAnalysis.FxCopAnalyzers/3.0.0": {
         "type": "package",
         "dependencies": {
@@ -219,100 +195,6 @@
     }
   },
   "libraries": {
-    "Bridge/17.10.1": {
-      "sha512": "RBmPyeemxACXgNyVKyKRRoZTFX428wVYCx36qID+RNVQf+5uadz9EE5uEzEujf8ixefMtHnZmf79+aDybtMb+Q==",
-      "type": "package",
-      "path": "bridge/17.10.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "bridge.17.10.1.nupkg.sha512",
-        "bridge.nuspec",
-        "content/bridge.json"
-      ]
-    },
-    "Bridge.Core/17.10.1": {
-      "sha512": "N7BD8Ci+2Bas9hS02fHfOQ2M750tVLe/bR+8Dz76ED+oT44GJV3aqsJdn9dd32AtIa6oy1UhP2q0lVy1Ooml4g==",
-      "type": "package",
-      "path": "bridge.core/17.10.1",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "bridge.core.17.10.1.nupkg.sha512",
-        "bridge.core.nuspec",
-        "lib/net40/Bridge.dll",
-        "lib/net40/Bridge.xml",
-        "lib/net40/pdb/Bridge.pdb",
-        "tools/install.ps1"
-      ]
-    },
-    "Bridge.Min/17.10.1": {
-      "sha512": "tlbF607WNpbCYDlLwjOiPDrP1RlJp/3TpAGb6W2hytvezLvfXq9BAMvbKuwpVu66JnisXrlv/bgftUQ5Tte/Qg==",
-      "type": "package",
-      "path": "bridge.min/17.10.1",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "bridge.min.17.10.1.nupkg.sha512",
-        "bridge.min.nuspec",
-        "build/Bridge.Min.targets",
-        "tools/AjaxMin.dll",
-        "tools/Bridge.Builder.v17.dll",
-        "tools/Bridge.Contract.dll",
-        "tools/Bridge.Translator.dll",
-        "tools/ICSharpCode.NRefactory.CSharp.dll",
-        "tools/ICSharpCode.NRefactory.Cecil.dll",
-        "tools/ICSharpCode.NRefactory.dll",
-        "tools/Microsoft.Build.Framework.dll",
-        "tools/Microsoft.Build.Utilities.Core.dll",
-        "tools/Microsoft.Build.dll",
-        "tools/Microsoft.CodeAnalysis.CSharp.dll",
-        "tools/Microsoft.CodeAnalysis.dll",
-        "tools/Mono.Cecil.Mdb.dll",
-        "tools/Mono.Cecil.Pdb.dll",
-        "tools/Mono.Cecil.Rocks.dll",
-        "tools/Mono.Cecil.dll",
-        "tools/Newtonsoft.Json.dll",
-        "tools/Object.Net.Utilities.dll",
-        "tools/System.AppContext.dll",
-        "tools/System.Collections.Immutable.dll",
-        "tools/System.Composition.AttributedModel.dll",
-        "tools/System.Composition.Convention.dll",
-        "tools/System.Composition.Hosting.dll",
-        "tools/System.Composition.Runtime.dll",
-        "tools/System.Composition.TypedParts.dll",
-        "tools/System.Console.dll",
-        "tools/System.Diagnostics.FileVersionInfo.dll",
-        "tools/System.Diagnostics.StackTrace.dll",
-        "tools/System.IO.Compression.dll",
-        "tools/System.IO.FileSystem.Primitives.dll",
-        "tools/System.IO.FileSystem.dll",
-        "tools/System.Reflection.Metadata.dll",
-        "tools/System.Runtime.InteropServices.RuntimeInformation.dll",
-        "tools/System.Security.Cryptography.Algorithms.dll",
-        "tools/System.Security.Cryptography.Encoding.dll",
-        "tools/System.Security.Cryptography.Primitives.dll",
-        "tools/System.Security.Cryptography.X509Certificates.dll",
-        "tools/System.Text.Encoding.CodePages.dll",
-        "tools/System.Threading.Tasks.Dataflow.dll",
-        "tools/System.Threading.Thread.dll",
-        "tools/System.ValueTuple.dll",
-        "tools/System.Xml.ReaderWriter.dll",
-        "tools/System.Xml.XPath.XDocument.dll",
-        "tools/System.Xml.XPath.dll",
-        "tools/System.Xml.XmlDocument.dll",
-        "tools/TopologicalSorting.dll",
-        "tools/bridge.exe"
-      ]
-    },
     "Microsoft.CodeAnalysis.FxCopAnalyzers/3.0.0": {
       "sha512": "ea8bbNa4fzS/s55AUCAvYjb6Y3lFysFVfEwt9zIwR/NeFpOcUluIleOXSUPAyUtwBFugn01aWvNfMVmIwnvgqQ==",
       "type": "package",
@@ -908,7 +790,6 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.8": [
-      "Bridge >= 17.10.1",
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.0.0",
       "Newtonsoft.Json >= 12.0.3",
       "NuGet.Client >= 4.2.0",
@@ -920,13 +801,13 @@
     "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "3.20.6.24",
+    "version": "3.20.9.6",
     "restore": {
-      "projectUniqueName": "C:\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "projectUniqueName": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
-      "projectPath": "C:\\Repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
+      "projectPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "packagesPath": "C:\\Users\\MeisterAdmin\\.nuget\\packages\\",
-      "outputPath": "C:\\Repos\\MeisterCore\\MeisterCore\\obj\\",
+      "outputPath": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
@@ -958,10 +839,6 @@
     "frameworks": {
       "net48": {
         "dependencies": {
-          "Bridge": {
-            "target": "Package",
-            "version": "[17.10.1, )"
-          },
           "Microsoft.CodeAnalysis.FxCopAnalyzers": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",

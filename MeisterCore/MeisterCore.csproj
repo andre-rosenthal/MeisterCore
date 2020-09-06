@@ -14,10 +14,10 @@ Meister V2.x Core Nuger Package</Description>
     <SignAssembly>true</SignAssembly>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>3.20.06.24</Version>
+    <Version>3.20.09.06</Version>
     <PackageReleaseNotes>Based on .Net 4.8</PackageReleaseNotes>
-    <AssemblyVersion>3.20.06.24</AssemblyVersion>
-    <FileVersion>3.20.06.24</FileVersion>
+    <AssemblyVersion>3.20.09.06</AssemblyVersion>
+    <FileVersion>3.20.09.06</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>
@@ -44,7 +44,6 @@ Meister V2.x Core Nuger Package</Description>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Bridge" Version="17.10.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -82,6 +81,7 @@ Meister V2.x Core Nuger Package</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="mscorlib" />
     <Reference Include="System.Net.Http">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Net.Http.dll</HintPath>
     </Reference>

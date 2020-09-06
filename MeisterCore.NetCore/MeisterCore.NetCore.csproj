@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>3.20.06.24</Version>
+    <Version>3.20.09.06</Version>
     <Description>Meister Core for .Net Core 3.1
 Meister V2.x
 Meister V3</Description>
@@ -47,8 +47,8 @@ Meister V3</Description>
   </ItemGroup>
   <PropertyGroup>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <AssemblyVersion>3.20.06.24</AssemblyVersion>
-    <FileVersion>3.20.06.24</FileVersion>
+    <AssemblyVersion>3.20.09.06</AssemblyVersion>
+    <FileVersion>3.20.09.06</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MeisterV2Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

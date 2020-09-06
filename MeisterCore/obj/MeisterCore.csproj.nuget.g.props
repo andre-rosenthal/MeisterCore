@@ -25,7 +25,5 @@
     <PkgMicrosoft_CodeQuality_Analyzers Condition=" '$(PkgMicrosoft_CodeQuality_Analyzers)' == '' ">C:\Users\MeisterAdmin\.nuget\packages\microsoft.codequality.analyzers\3.0.0</PkgMicrosoft_CodeQuality_Analyzers>
     <PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer Condition=" '$(PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer)' == '' ">C:\Users\MeisterAdmin\.nuget\packages\microsoft.codeanalysis.versioncheckanalyzer\3.0.0</PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer>
     <PkgMicrosoft_CodeAnalysis_FxCopAnalyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_FxCopAnalyzers)' == '' ">C:\Users\MeisterAdmin\.nuget\packages\microsoft.codeanalysis.fxcopanalyzers\3.0.0</PkgMicrosoft_CodeAnalysis_FxCopAnalyzers>
-    <PkgBridge_Core Condition=" '$(PkgBridge_Core)' == '' ">C:\Users\MeisterAdmin\.nuget\packages\bridge.core\17.10.1</PkgBridge_Core>
-    <PkgBridge_Min Condition=" '$(PkgBridge_Min)' == '' ">C:\Users\MeisterAdmin\.nuget\packages\bridge.min\17.10.1</PkgBridge_Min>
   </PropertyGroup>
 </Project>
