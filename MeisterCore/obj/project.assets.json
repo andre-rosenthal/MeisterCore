@@ -2,37 +2,37 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.8": {
-      "Microsoft.CodeAnalysis.FxCopAnalyzers/3.0.0": {
+      "Microsoft.CodeAnalysis.FxCopAnalyzers/3.3.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.CodeAnalysis.VersionCheckAnalyzer": "[3.0.0]",
-          "Microsoft.CodeQuality.Analyzers": "[3.0.0]",
-          "Microsoft.NetCore.Analyzers": "[3.0.0]",
-          "Microsoft.NetFramework.Analyzers": "[3.0.0]"
+          "Microsoft.CodeAnalysis.VersionCheckAnalyzer": "[3.3.0]",
+          "Microsoft.CodeQuality.Analyzers": "[3.3.0]",
+          "Microsoft.NetCore.Analyzers": "[3.3.0]",
+          "Microsoft.NetFramework.Analyzers": "[3.3.0]"
         },
         "build": {
           "build/Microsoft.CodeAnalysis.FxCopAnalyzers.props": {}
         }
       },
-      "Microsoft.CodeAnalysis.VersionCheckAnalyzer/3.0.0": {
+      "Microsoft.CodeAnalysis.VersionCheckAnalyzer/3.3.0": {
         "type": "package",
         "build": {
           "build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props": {}
         }
       },
-      "Microsoft.CodeQuality.Analyzers/3.0.0": {
+      "Microsoft.CodeQuality.Analyzers/3.3.0": {
         "type": "package",
         "build": {
           "build/Microsoft.CodeQuality.Analyzers.props": {}
         }
       },
-      "Microsoft.NetCore.Analyzers/3.0.0": {
+      "Microsoft.NetCore.Analyzers/3.3.0": {
         "type": "package",
         "build": {
           "build/Microsoft.NetCore.Analyzers.props": {}
         }
       },
-      "Microsoft.NetFramework.Analyzers/3.0.0": {
+      "Microsoft.NetFramework.Analyzers/3.3.0": {
         "type": "package",
         "build": {
           "build/Microsoft.NetFramework.Analyzers.props": {}
@@ -180,7 +180,7 @@
           "lib/net45/NuGet.Versioning.dll": {}
         }
       },
-      "RestSharp/106.11.4": {
+      "RestSharp/106.11.5": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Web"
@@ -195,10 +195,10 @@
     }
   },
   "libraries": {
-    "Microsoft.CodeAnalysis.FxCopAnalyzers/3.0.0": {
-      "sha512": "ea8bbNa4fzS/s55AUCAvYjb6Y3lFysFVfEwt9zIwR/NeFpOcUluIleOXSUPAyUtwBFugn01aWvNfMVmIwnvgqQ==",
+    "Microsoft.CodeAnalysis.FxCopAnalyzers/3.3.0": {
+      "sha512": "k3Icqx8kc+NrHImuiB8Jc/wd32Xeyd2B/7HOR5Qu9pyKzXQ4ikPeBAwzG2FSTuYhyIuNWvwL5k9yYBbbVz6w9w==",
       "type": "package",
-      "path": "microsoft.codeanalysis.fxcopanalyzers/3.0.0",
+      "path": "microsoft.codeanalysis.fxcopanalyzers/3.3.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -230,13 +230,15 @@
         "editorconfig/PerformanceRulesEnabled/.editorconfig",
         "editorconfig/PortedFromFxCopRulesDefault/.editorconfig",
         "editorconfig/PortedFromFxCopRulesEnabled/.editorconfig",
+        "editorconfig/PublishRulesDefault/.editorconfig",
+        "editorconfig/PublishRulesEnabled/.editorconfig",
         "editorconfig/ReliabilityRulesDefault/.editorconfig",
         "editorconfig/ReliabilityRulesEnabled/.editorconfig",
         "editorconfig/SecurityRulesDefault/.editorconfig",
         "editorconfig/SecurityRulesEnabled/.editorconfig",
         "editorconfig/UsageRulesDefault/.editorconfig",
         "editorconfig/UsageRulesEnabled/.editorconfig",
-        "microsoft.codeanalysis.fxcopanalyzers.3.0.0.nupkg.sha512",
+        "microsoft.codeanalysis.fxcopanalyzers.3.3.0.nupkg.sha512",
         "microsoft.codeanalysis.fxcopanalyzers.nuspec",
         "rulesets/AllRulesDefault.ruleset",
         "rulesets/AllRulesDisabled.ruleset",
@@ -259,6 +261,8 @@
         "rulesets/PerformanceRulesEnabled.ruleset",
         "rulesets/PortedFromFxCopRulesDefault.ruleset",
         "rulesets/PortedFromFxCopRulesEnabled.ruleset",
+        "rulesets/PublishRulesDefault.ruleset",
+        "rulesets/PublishRulesEnabled.ruleset",
         "rulesets/ReliabilityRulesDefault.ruleset",
         "rulesets/ReliabilityRulesEnabled.ruleset",
         "rulesets/SecurityRulesDefault.ruleset",
@@ -278,10 +282,10 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.CodeAnalysis.VersionCheckAnalyzer/3.0.0": {
-      "sha512": "RL9OdvWLhtQXcvxK2EPbXM9LandLcDG14Ndz5baVH2aiyvEB11VrHfrzLNoEE5B2/zhRGqN+BHsBg21f75wG9g==",
+    "Microsoft.CodeAnalysis.VersionCheckAnalyzer/3.3.0": {
+      "sha512": "xjLM3DRFZMan3nQyBQEM1mBw6VqQybi4iMJhMFW6Ic1E1GCvqJR3ABOwEL7WtQjDUzxyrGld9bASnAos7G/Xyg==",
       "type": "package",
-      "path": "microsoft.codeanalysis.versioncheckanalyzer/3.0.0",
+      "path": "microsoft.codeanalysis.versioncheckanalyzer/3.3.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -315,7 +319,7 @@
         "editorconfig/PortedFromFxCopRulesEnabled/.editorconfig",
         "editorconfig/ReliabilityRulesDefault/.editorconfig",
         "editorconfig/ReliabilityRulesEnabled/.editorconfig",
-        "microsoft.codeanalysis.versioncheckanalyzer.3.0.0.nupkg.sha512",
+        "microsoft.codeanalysis.versioncheckanalyzer.3.3.0.nupkg.sha512",
         "microsoft.codeanalysis.versioncheckanalyzer.nuspec",
         "rulesets/AllRulesDefault.ruleset",
         "rulesets/AllRulesDisabled.ruleset",
@@ -330,10 +334,10 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.CodeQuality.Analyzers/3.0.0": {
-      "sha512": "pOROTgdPa+15sYfEMvDlWlDEedCO1SuRLrRjX36Ltli3SmhZawC2Vgws4crz1XMs9WRzBo8WIJM5WRzGNsOSmQ==",
+    "Microsoft.CodeQuality.Analyzers/3.3.0": {
+      "sha512": "zZ3miq6u22UFQKhfJyLnVEJ+DgeOopLh3eKJnKAcOetPP2hiv3wa7kHZlBDeTvtqJQiAQhAVbttket8XxjN1zw==",
       "type": "package",
-      "path": "microsoft.codequality.analyzers/3.0.0",
+      "path": "microsoft.codequality.analyzers/3.3.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -372,6 +376,7 @@
         "analyzers/dotnet/vb/tr/Microsoft.CodeQuality.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hans/Microsoft.CodeQuality.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hant/Microsoft.CodeQuality.Analyzers.resources.dll",
+        "build/DisableNETAnalyzersForNuGetPackage.props",
         "build/Microsoft.CodeQuality.Analyzers.props",
         "documentation/Analyzer Configuration.md",
         "documentation/Microsoft.CodeQuality.Analyzers.md",
@@ -399,7 +404,7 @@
         "editorconfig/SecurityRulesEnabled/.editorconfig",
         "editorconfig/UsageRulesDefault/.editorconfig",
         "editorconfig/UsageRulesEnabled/.editorconfig",
-        "microsoft.codequality.analyzers.3.0.0.nupkg.sha512",
+        "microsoft.codequality.analyzers.3.3.0.nupkg.sha512",
         "microsoft.codequality.analyzers.nuspec",
         "rulesets/AllRulesDefault.ruleset",
         "rulesets/AllRulesDisabled.ruleset",
@@ -428,10 +433,10 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.NetCore.Analyzers/3.0.0": {
-      "sha512": "JdjhkobYjmQAu4JpsEALDAr7xig2pzXMsXGilHJ2gvmUaUSBjYObw53CBaIkRXmPu0DaDPN8ze9LCtsRd1R8UA==",
+    "Microsoft.NetCore.Analyzers/3.3.0": {
+      "sha512": "6qptTHUu1Wfszuf83NhU0IoAb4j7YWOpJs6oc6S4G/nI6aGGWKH/Xi5Vs9L/8lrI74ijEEzPcIwafSQW5ASHtA==",
       "type": "package",
-      "path": "microsoft.netcore.analyzers/3.0.0",
+      "path": "microsoft.netcore.analyzers/3.3.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -468,6 +473,7 @@
         "analyzers/dotnet/vb/tr/Microsoft.NetCore.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hans/Microsoft.NetCore.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hant/Microsoft.NetCore.Analyzers.resources.dll",
+        "build/DisableNETAnalyzersForNuGetPackage.props",
         "build/Microsoft.NetCore.Analyzers.props",
         "documentation/Analyzer Configuration.md",
         "documentation/Microsoft.NetCore.Analyzers.md",
@@ -485,13 +491,15 @@
         "editorconfig/PerformanceRulesEnabled/.editorconfig",
         "editorconfig/PortedFromFxCopRulesDefault/.editorconfig",
         "editorconfig/PortedFromFxCopRulesEnabled/.editorconfig",
+        "editorconfig/PublishRulesDefault/.editorconfig",
+        "editorconfig/PublishRulesEnabled/.editorconfig",
         "editorconfig/ReliabilityRulesDefault/.editorconfig",
         "editorconfig/ReliabilityRulesEnabled/.editorconfig",
         "editorconfig/SecurityRulesDefault/.editorconfig",
         "editorconfig/SecurityRulesEnabled/.editorconfig",
         "editorconfig/UsageRulesDefault/.editorconfig",
         "editorconfig/UsageRulesEnabled/.editorconfig",
-        "microsoft.netcore.analyzers.3.0.0.nupkg.sha512",
+        "microsoft.netcore.analyzers.3.3.0.nupkg.sha512",
         "microsoft.netcore.analyzers.nuspec",
         "rulesets/AllRulesDefault.ruleset",
         "rulesets/AllRulesDisabled.ruleset",
@@ -506,6 +514,8 @@
         "rulesets/PerformanceRulesEnabled.ruleset",
         "rulesets/PortedFromFxCopRulesDefault.ruleset",
         "rulesets/PortedFromFxCopRulesEnabled.ruleset",
+        "rulesets/PublishRulesDefault.ruleset",
+        "rulesets/PublishRulesEnabled.ruleset",
         "rulesets/ReliabilityRulesDefault.ruleset",
         "rulesets/ReliabilityRulesEnabled.ruleset",
         "rulesets/SecurityRulesDefault.ruleset",
@@ -516,10 +526,10 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.NetFramework.Analyzers/3.0.0": {
-      "sha512": "Q0sB3JYld9JMa9/HKtioIxhqmOohEku1FkfSC/uf0usGcCIhm6GYWU565klP64jC2kzmjFIu/6fkHEIYRqZCQQ==",
+    "Microsoft.NetFramework.Analyzers/3.3.0": {
+      "sha512": "JTfMic5fEFWICePbr7GXOGPranqS9Qxu2U/BZEcnnGbK1SFW8TxRyGp6O1L52xsbfOdqmzjc0t5ubhDrjj+Xpg==",
       "type": "package",
-      "path": "microsoft.netframework.analyzers/3.0.0",
+      "path": "microsoft.netframework.analyzers/3.3.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -556,6 +566,7 @@
         "analyzers/dotnet/vb/tr/Microsoft.NetFramework.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hans/Microsoft.NetFramework.Analyzers.resources.dll",
         "analyzers/dotnet/vb/zh-Hant/Microsoft.NetFramework.Analyzers.resources.dll",
+        "build/DisableNETAnalyzersForNuGetPackage.props",
         "build/Microsoft.NetFramework.Analyzers.props",
         "documentation/Analyzer Configuration.md",
         "documentation/Microsoft.NetFramework.Analyzers.md",
@@ -571,7 +582,7 @@
         "editorconfig/PortedFromFxCopRulesEnabled/.editorconfig",
         "editorconfig/SecurityRulesDefault/.editorconfig",
         "editorconfig/SecurityRulesEnabled/.editorconfig",
-        "microsoft.netframework.analyzers.3.0.0.nupkg.sha512",
+        "microsoft.netframework.analyzers.3.3.0.nupkg.sha512",
         "microsoft.netframework.analyzers.nuspec",
         "rulesets/AllRulesDefault.ruleset",
         "rulesets/AllRulesDisabled.ruleset",
@@ -771,10 +782,10 @@
         "nuget.versioning.nuspec"
       ]
     },
-    "RestSharp/106.11.4": {
-      "sha512": "vx35q52cM3UQNOiN3UqSQ9U7I5UeoyzVmjsWKQxOxn6FVu+n01+SNwhxc/jvf92WPBmmwzTV4VYTeTg4KviJdA==",
+    "RestSharp/106.11.5": {
+      "sha512": "/DgzFdYoUcWGIsspNG1AvxdTcCxbrItgAQLW30by5AQ6jhnC46WgOK5B38UFIHYJNm7+YIWM+rdEMyXSrdO6Jw==",
       "type": "package",
-      "path": "restsharp/106.11.4",
+      "path": "restsharp/106.11.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -782,7 +793,7 @@
         "lib/net452/RestSharp.xml",
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.106.11.4.nupkg.sha512",
+        "restsharp.106.11.5.nupkg.sha512",
         "restsharp.nuspec",
         "restsharp.png"
       ]
@@ -790,10 +801,10 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.8": [
-      "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.0.0",
+      "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0",
       "Newtonsoft.Json >= 12.0.3",
       "NuGet.Client >= 4.2.0",
-      "RestSharp >= 106.11.4"
+      "RestSharp >= 106.11.5"
     ]
   },
   "packageFolders": {
@@ -801,7 +812,7 @@
     "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "3.20.9.7",
+    "version": "3.20.9.24",
     "restore": {
       "projectUniqueName": "C:\\Users\\MeisterAdmin\\source\\repos\\MeisterCore\\MeisterCore\\MeisterCore.csproj",
       "projectName": "MeisterCore",
@@ -843,7 +854,7 @@
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[3.0.0, )"
+            "version": "[3.3.0, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",
@@ -855,7 +866,7 @@
           },
           "RestSharp": {
             "target": "Package",
-            "version": "[106.11.4, )"
+            "version": "[106.11.5, )"
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"

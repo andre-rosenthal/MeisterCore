@@ -1,4 +1,4 @@
-﻿namespace MeisterCore.Meister_Core_v3
+﻿namespace MeisterCore.MeisterCoreV3
 {
     public class MeisterResponse<RES>
     {
