@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>3.20.09.24</Version>
+    <Version>4.06.11.1</Version>
     <Description>Meister Core for .Net Core 3.1
 Meister V2.x
 Meister V3</Description>
     <Copyright>Gateway Architects, LLC</Copyright>
-    <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 4.8</PackageReleaseNotes>
+    <PackageReleaseNotes>Linked Sourced with MeisterCore for .Net Framework 5.0</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>www.meisterapplications.com</PackageProjectUrl>
     <PackageIcon>Meister.jpg</PackageIcon>
@@ -31,8 +31,9 @@ Meister V3</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.11.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,8 +48,8 @@ Meister V3</Description>
   </ItemGroup>
   <PropertyGroup>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <AssemblyVersion>3.20.09.24</AssemblyVersion>
-    <FileVersion>3.20.09.24</FileVersion>
+    <AssemblyVersion>4.06.11.1</AssemblyVersion>
+    <FileVersion>4.06.11.1</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MeisterV2Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
