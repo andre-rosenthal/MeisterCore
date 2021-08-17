@@ -103,7 +103,6 @@ namespace MeisterCore
             }
             return new MeisterStatus();
         }
-
         /// <summary>
         /// OAuth 2.0
         /// </summary>
@@ -133,7 +132,6 @@ namespace MeisterCore
             else
                 throw new MeisterException(resourceManager.GetString("InvalidOauth", CultureInfo.InvariantCulture));
         }
-
         /// <summary>
         /// Basic Authenticator
         /// </summary>
@@ -161,7 +159,6 @@ namespace MeisterCore
             else
                 throw new MeisterException(resourceManager.GetString("BadAuthetication", CultureInfo.InvariantCulture));
         }
-
         /// <summary>
         /// Meister execution path
         /// </summary>
@@ -339,17 +336,8 @@ namespace MeisterCore
                                     throw new MeisterException(failure.BackendMessage, HttpStatusCode.InternalServerError);
                             }
                         }
-                        catch (MeisterException mex)
+                        catch (Exception)
                         {
-                            MeisterStatus.StatusCode = mex.httpStatusCode;
-                            MeisterStatus.LogEntry = mex.Message;
-                            throw;
-                        }
-                        catch (Exception ex)
-                        {
-                            MeisterStatus.StatusCode = System.Net.HttpStatusCode.NotImplemented;
-                            MeisterStatus.LogEntry = ex.Message;
-                            throw;
                         }
                     }
                     return VanillaProcess<RES>(json);
@@ -536,7 +524,6 @@ namespace MeisterCore
         {
             return (statusCode >= HttpStatusCode.OK && statusCode < HttpStatusCode.BadRequest);
         }
-
         /// <summary>
         /// Vanilla Processor
         /// </summary>
@@ -677,25 +664,14 @@ namespace MeisterCore
         {
             request.Resource = resource;
             request.RequestFormat = DataFormat.Json;
-            var list = AddSAPSuffixes(request);
-            if (list != null)
-                foreach (var p in list)
-                    request.AddParameter(p);
+            AddParameters(request);
         }
-        private List<Parameter> AddSAPSuffixes(RestRequest request)
+        private void AddParameters(RestRequest request)
         {
-            List<Parameter> list = new List<Parameter>();
             if (SapClientOK)
-                list.Add(new Parameter(Sap_client, sap_client, ParameterType.GetOrPost));
+                request.AddParameter(Sap_client, sap_client, ParameterType.GetOrPost);
             if (sap_language != Languages.CultureBased)
-            {
-                var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-                foreach (var item in cultures)
-                    if (item.TwoLetterISOLanguageName.ToUpper(CultureInfo.CurrentCulture) == Enum.GetName(typeof(Languages), sap_language))
-                        request.AddHeader("Accept-Language", item.Name);
-                list.Add(new Parameter(Sap_language, Enum.GetName(typeof(Languages), sap_language), ParameterType.GetOrPost));
-            }
-            return list;
+                request.AddParameter(Sap_language, Enum.GetName(typeof(Languages), sap_language), ParameterType.GetOrPost);
         }
     }
 }

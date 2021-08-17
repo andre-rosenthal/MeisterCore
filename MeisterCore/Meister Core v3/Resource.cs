@@ -4,7 +4,6 @@ using static MeisterCore.Support.MeisterSupport;
 using MeisterCore.Support;
 using System.Resources;
 using System.Globalization;
-
 namespace MeisterCore
 {
     /// <summary>

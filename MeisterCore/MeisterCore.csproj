@@ -14,10 +14,10 @@ Meister V3.x Core Nuger Package</Description>
     <SignAssembly>true</SignAssembly>
     <PackageProjectUrl>http://www.meisterapplications.com</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <Version>4.06.11.1</Version>
+    <Version>4.08.17.01</Version>
     <PackageReleaseNotes>Based on .Net 5.0</PackageReleaseNotes>
-    <AssemblyVersion>4.06.11.1</AssemblyVersion>
-    <FileVersion>4.06.11.1</FileVersion>
+    <AssemblyVersion>4.08.17.01</AssemblyVersion>
+    <FileVersion>4.08.17.01</FileVersion>
     <LangVersion>7.3</LangVersion>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <PackageLicenseExpression></PackageLicenseExpression>
@@ -31,8 +31,14 @@ Meister V3.x Core Nuger Package</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="CoreCode v2 %28legacy%29\**" />
+    <Compile Remove="JScript\**" />
+    <Compile Remove="Resources\**" />
     <EmbeddedResource Remove="CoreCode v2 %28legacy%29\**" />
+    <EmbeddedResource Remove="JScript\**" />
+    <EmbeddedResource Remove="Resources\**" />
     <None Remove="CoreCode v2 %28legacy%29\**" />
+    <None Remove="JScript\**" />
+    <None Remove="Resources\**" />
     <Content Include="package.json" />
     <None Include="Licenses\Meister.jpg">
       <Pack>True</Pack>
@@ -44,10 +50,9 @@ Meister V3.x Core Nuger Package</Description>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NuGet.Client" Version="4.2.0" />
-    <PackageReference Include="RestSharp" Version="106.11.7" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="RestSharp" Version="106.12.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +67,7 @@ Meister V3.x Core Nuger Package</Description>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -73,8 +79,6 @@ Meister V3.x Core Nuger Package</Description>
 
   <ItemGroup>
     <Folder Include="bin\Release\" />
-    <Folder Include="JScript\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>

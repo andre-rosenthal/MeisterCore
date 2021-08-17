@@ -4,12 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 namespace MeisterCore.Support
 {
     /// <summary>
@@ -161,6 +162,7 @@ namespace MeisterCore.Support
     /// </summary>
     public static class MeisterSupport
     {
+        static private string key = @"TWVpc3RlciBJZGVudGl0eSBEYXRhYmFzZSBTZWNyZXQgQ29kZSBpcyA6IE1laXN0ZXJ2Mg==";
         [Flags]
         /// <summary>
         /// SAP languages
@@ -304,10 +306,10 @@ namespace MeisterCore.Support
             }
             finally
             {
-                Marshal.ZeroFreeGlobalAllocUnicode(pointer);
+                if (pointer != IntPtr.Zero)
+                    Marshal.ZeroFreeGlobalAllocUnicode(pointer);
             }
         }
-
         /// <summary>
         /// Remove dref from Meister's dref parser
         /// </summary>
@@ -340,7 +342,7 @@ namespace MeisterCore.Support
             }
         }
         /// <summary>
-        /// Bytes the array to string.
+        /// Bytes the array to string as ASCII - for all others use System.Text.Encoding.Unicode.GetString(ba)
         /// </summary>
         /// <returns>The array to string.</returns>
         /// <param name="ba">Ba.</param>
@@ -353,7 +355,7 @@ namespace MeisterCore.Support
             return s;
         }
         /// <summary>
-        /// Strings to byte array.
+        /// Strings to byte array as Unicode representation - for all others use System.Text.Encoding.Unicode.GetBytes(st)
         /// </summary>
         /// <returns>The to byte array.</returns>
         /// <param name="st">St.</param>
@@ -422,6 +424,131 @@ namespace MeisterCore.Support
                 }
                 return Encoding.Default.GetString(mso.ToArray(), 0, mso.ToArray().Length);
             }
+        }
+        /// <summary>
+        /// Encrypt
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string DoEncrypt(string data)
+        {
+            string encData = null;
+            byte[][] keys = GetHashKeys(key);
+            try
+            {
+                encData = EncryptStringToBytes_Aes(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+            return encData;
+        }
+        /// <summary>
+        /// Decrypt
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        static public string DoDecrypt(string data)
+        {
+            string decData = null;
+            byte[][] keys = GetHashKeys(key);
+            try
+            {
+                decData = DecryptStringFromBytes_Aes(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+            return decData;
+        }
+        /// <summary>
+        /// GatHashKeys
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        static private byte[][] GetHashKeys(string key)
+        {
+            byte[][] result = new byte[2][];
+            Encoding enc = Encoding.UTF8;
+            SHA256 sha2 = new SHA256CryptoServiceProvider();
+            byte[] rawKey = enc.GetBytes(key);
+            byte[] rawba = enc.GetBytes(key);
+            byte[] hashKey = sha2.ComputeHash(rawKey);
+            byte[] hashba = sha2.ComputeHash(rawba);
+            Array.Resize(ref hashba, 16);
+            result[0] = hashKey;
+            result[1] = hashba;
+            return result;
+        }
+        /// <summary>
+        /// EncryptStringToBytes_Aes
+        /// Courtesy of https://msdn.microsoft.com/de-de/library/system.security.cryptography.aes(v=vs.110).aspx
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <param name="key"></param>
+        /// <param name="ba"></param>
+        /// <returns></returns>
+        private static string EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] ba)
+        {
+            if (plainText == null || plainText.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException("key");
+            if (ba == null || ba.Length <= 0)
+                throw new ArgumentNullException("ba");
+            byte[] encrypted;
+            using (AesManaged aesAlg = new AesManaged())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = ba;
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+            return Convert.ToBase64String(encrypted);
+        }
+        /// <summary>
+        /// DecryptStringFromBytes_Aes
+        /// Courtesy of https://msdn.microsoft.com/de-de/library/system.security.cryptography.aes(v=vs.110).aspx
+        /// </summary>
+        /// <param name="cipherTextString"></param>
+        /// <param name="key"></param>
+        /// <param name="ba"></param>
+        /// <returns></returns>
+        private static string DecryptStringFromBytes_Aes(string cipherTextString, byte[] key, byte[] ba)
+        {
+            byte[] cipherText = Convert.FromBase64String(cipherTextString);
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException("key");
+            if (ba == null || ba.Length <= 0)
+                throw new ArgumentNullException("ba");
+            string plaintext = null;
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = ba;
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return plaintext;
         }
         #endregion
     }
